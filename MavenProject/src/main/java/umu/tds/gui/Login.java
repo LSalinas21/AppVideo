@@ -32,7 +32,7 @@ public class Login{
 	private JFrame frmLogin;
 	private JTextField textUser;
 	private JPasswordField fieldPass;
-	private JPanel contentPane,panelNorte,panelCentro,panelSur;
+	private JPanel panelNorte,panelCentro,panelSur;
 	private JLabel labelLogo,labelUsuario,labelPass;
 	private JButton botonLogin,botonRegistro;
 
