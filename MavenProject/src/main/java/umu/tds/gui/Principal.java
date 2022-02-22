@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import umu.tds.controlador.Controlador;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.FlowLayout;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
@@ -23,6 +25,11 @@ import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.GridBagConstraints;
+import javax.swing.JTextField;
+import java.awt.Insets;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class Principal extends Thread{
 
@@ -34,6 +41,15 @@ public class Principal extends Thread{
 	private JButton botonRecientes,botonNuevaLista;
 	private final JPanel panelPrincipal = new JPanel();
 	private JFrame frame;
+	private JLabel lblNewLabel;
+	private JTextField textField;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JLabel lblNewLabel_4;
+	private JList list;
+	private JLabel lblNewLabel_5;
+	private JList list_1;
+	private JScrollPane scrollPane;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -179,6 +195,8 @@ public class Principal extends Thread{
 		botonLogout.setEnabled(false);
 		panelLogout.add(botonLogout);
 		
+		configEventoBotonLogOut();
+		
 		
 	}
 	private void creaPanelPremiun() {
@@ -261,6 +279,22 @@ public class Principal extends Thread{
 			});
 		
 	}
+	private void configEventoBotonLogOut() {
+		
+		botonLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					
+					boolean loginOut = Controlador.getUnicaInstancia().loginOutUsuario();
+
+					if (loginOut) {
+						
+						deshabilitaAccionesUsuario();
+					} 
+				}
+				
+			});
+		
+	}
 	private void creaPanelPrincipal() {
 		
 		frame.getContentPane().add(panelPrincipal, BorderLayout.CENTER);
@@ -273,9 +307,83 @@ public class Principal extends Thread{
 		
 		panelExplorador = new JPanel();
 		panelPrincipal.add(panelExplorador, "explorador");
+		GridBagLayout gbl_panelExplorador = new GridBagLayout();
+		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 27, 0, 0};
+		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 0, 116, 0};
+		gbl_panelExplorador.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelExplorador.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelExplorador.setLayout(gbl_panelExplorador);
 		
-		JLabel lblNewLabel = new JLabel("Usa el boton Login para ingresear al sistema o Usa el boton Registro para darte de alta en el sistema");
-		panelExplorador.add(lblNewLabel);
+		lblNewLabel = new JLabel("Buscar titulo: ");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
+		gbc_lblNewLabel.gridx = 1;
+		gbc_lblNewLabel.gridy = 0;
+		panelExplorador.add(lblNewLabel, gbc_lblNewLabel);
+		
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 2;
+		gbc_textField.gridy = 0;
+		panelExplorador.add(textField, gbc_textField);
+		textField.setColumns(10);
+		
+		btnNewButton = new JButton("Buscar");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 3;
+		gbc_btnNewButton.gridy = 0;
+		panelExplorador.add(btnNewButton, gbc_btnNewButton);
+		
+		btnNewButton_1 = new JButton("Nueva Busqueda");
+		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_1.gridx = 2;
+		gbc_btnNewButton_1.gridy = 1;
+		panelExplorador.add(btnNewButton_1, gbc_btnNewButton_1);
+		
+		lblNewLabel_4 = new JLabel("Etiquetas disponibles");
+		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
+		gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_4.gridx = 5;
+		gbc_lblNewLabel_4.gridy = 1;
+		panelExplorador.add(lblNewLabel_4, gbc_lblNewLabel_4);
+		
+		scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.gridheight = 4;
+		gbc_scrollPane.gridwidth = 3;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 1;
+		gbc_scrollPane.gridy = 2;
+		panelExplorador.add(scrollPane, gbc_scrollPane);
+		
+		list = new JList();
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.gridheight = 2;
+		gbc_list.insets = new Insets(0, 0, 5, 0);
+		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.gridx = 5;
+		gbc_list.gridy = 2;
+		panelExplorador.add(list, gbc_list);
+		
+		lblNewLabel_5 = new JLabel("Buscar etiquetas");
+		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
+		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_5.gridx = 5;
+		gbc_lblNewLabel_5.gridy = 4;
+		panelExplorador.add(lblNewLabel_5, gbc_lblNewLabel_5);
+		
+		list_1 = new JList();
+		GridBagConstraints gbc_list_1 = new GridBagConstraints();
+		gbc_list_1.fill = GridBagConstraints.BOTH;
+		gbc_list_1.gridx = 5;
+		gbc_list_1.gridy = 5;
+		panelExplorador.add(list_1, gbc_list_1);
 		
 		panelMisListas = new JPanel();
 		panelPrincipal.add(panelMisListas, "mislistas");

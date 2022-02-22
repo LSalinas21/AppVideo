@@ -1,5 +1,8 @@
 package umu.tds.controlador;
 
+import umu.tds.dao.DAOException;
+import umu.tds.dao.FactoriaDAO;
+import umu.tds.dao.UsuarioDAO;
 import umu.tds.dominio.CatalogoUsuarios;
 import umu.tds.dominio.Usuario;
 
@@ -7,9 +10,15 @@ public class Controlador {
 	
 	private Usuario usuarioActual;
 	private static Controlador unicaInstancia;
+	private FactoriaDAO factoria;
 	
 	private Controlador() {
 		usuarioActual = null;
+		try {
+			factoria = FactoriaDAO.getInstancia();
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static Controlador getUnicaInstancia() {
@@ -30,6 +39,10 @@ public class Controlador {
 			return false;
 		
 		Usuario usuario = new Usuario(nombre, apellidos, email, login, password, fechaNacimiento);
+		
+		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO();
+		usuarioDAO.create(usuario);
+		
 		CatalogoUsuarios.getUnicaInstancia().addUsuario(usuario);
 		return true;
 	}
@@ -37,10 +50,25 @@ public class Controlador {
 		Usuario usuario = CatalogoUsuarios.getUnicaInstancia().getUsuario(nombre);
 		if (usuario != null && usuario.getPassword().equals(password)) {
 			this.usuarioActual = usuario;
-			System.out.println("logeado");
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean borrarUsuario(Usuario usuario) {
+		if (!esUsuarioRegistrado(usuario.getNick()))
+			return false;
+
+		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); /* Adaptador DAO para borrar el Usuario de la BD */
+		usuarioDAO.delete(usuario);
+
+		CatalogoUsuarios.getUnicaInstancia().removeUsuario(usuario);
+		return true;
+	}
+	public boolean loginOutUsuario() {
+		
+		usuarioActual = null;
+		return true;
 	}
 
 }
