@@ -5,6 +5,7 @@ public class Video {
 	private String url;
 	private String titulo;
 	private int numRepro;
+	private int id;
 	
 	public Video(String url, String titulo, int numRepro) {
 		
@@ -35,6 +36,15 @@ public class Video {
 
 	public void setNumRepro(int numRepro) {
 		this.numRepro = numRepro;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		
+		this.id = id;
 	}
 	
 	
