@@ -1,7 +1,7 @@
 package umu.tds.dominio;
 
 public class Usuario {
-	//prueba
+	//prueba de verdad va?
 	private int id;
 	private String nombre;
 	private String apellidos;
