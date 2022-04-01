@@ -10,12 +10,23 @@ public class Usuario {
 	private String password;
 	private String fechaNacimiento;
 	
+	public Usuario(String nombre, String apellidos, String email, String nick, String password,
+			String fechaNacimiento) {
+		this.id=0;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.email = email;
+		this.nick = nick;
+		this.password = password;
+		this.fechaNacimiento = fechaNacimiento;
+	}
+/**
 	public Usuario() {
 		
 		
 		
 	}
-
+*/
 	public String getNombre() {
 		return nombre;
 	}
