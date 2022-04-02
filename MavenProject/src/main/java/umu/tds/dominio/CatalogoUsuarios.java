@@ -8,7 +8,7 @@ import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
 
 public class CatalogoUsuarios {
-	
+	//prueba commit
 	private static CatalogoUsuarios unicaInstancia;
 	private FactoriaDAO factoria;
 	
