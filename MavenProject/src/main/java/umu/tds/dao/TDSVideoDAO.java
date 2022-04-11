@@ -35,7 +35,7 @@ public class TDSVideoDAO implements VideoDAO{
 		String numRepro = servPersistencia.recuperarPropiedadEntidad(eVideo, NUM_REPRO);
 		
 		Video video = new Video(url, titulo, Integer.parseInt(numRepro));
-		
+		video.setId(eVideo.getId());
 		return video;
 	}
 	
@@ -45,7 +45,8 @@ public class TDSVideoDAO implements VideoDAO{
 		eVideo.setNombre(VIDEO);
 
 		eVideo.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(URL, video.getUrl()),
-				new Propiedad(TITULO, video.getTitulo()), new Propiedad(NUM_REPRO, String.valueOf(video.getNumRepro())))));
+				new Propiedad(TITULO, video.getTitulo()), 
+				new Propiedad(NUM_REPRO, String.valueOf(video.getNumRepro())))));
 		return eVideo;
 	}
 	
@@ -53,6 +54,7 @@ public class TDSVideoDAO implements VideoDAO{
 		
 		Entidad eVideo = this.videoToEntidad(video);
 		eVideo = servPersistencia.registrarEntidad(eVideo);
+		video.setId(eVideo.getId());
 		
 	}
 	
