@@ -23,6 +23,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JButton;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagConstraints;
@@ -30,6 +31,7 @@ import javax.swing.JTextField;
 import java.awt.Insets;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class Principal extends Thread{
 
@@ -43,19 +45,20 @@ public class Principal extends Thread{
 	private JFrame frame;
 	private JLabel lblNewLabel;
 	private JTextField textField;
-	private JButton btnNewButton;
+	private JButton botonBuscar;
 	private JButton btnNewButton_1;
 	private JLabel lblNewLabel_4;
 	private JList list;
 	private JLabel lblNewLabel_5;
 	private JList list_1;
 	private JScrollPane scrollPane;
+	private JPanel panelDeBusqueda;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
 	}
 	public void run() {
-		
+	
 		while(true) {
 			
 			try {
@@ -303,6 +306,20 @@ public class Principal extends Thread{
 		configPanelPrincipal();
 		
 	}
+	private void eventoBotonBuscar() {
+		
+		botonBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JLabel labels[] = new JLabel[200];
+			    for (int i =  0; i < 200; i++) {
+			       labels[i] = new JLabel("Label" + i);
+			       panelDeBusqueda.add(labels[i]);
+			 }
+			}
+		});
+		
+	}
 	private void configPanelPrincipal() {
 		
 		panelExplorador = new JPanel();
@@ -331,12 +348,15 @@ public class Principal extends Thread{
 		panelExplorador.add(textField, gbc_textField);
 		textField.setColumns(10);
 		
-		btnNewButton = new JButton("Buscar");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 0;
-		panelExplorador.add(btnNewButton, gbc_btnNewButton);
+		
+		botonBuscar = new JButton("Buscar");
+		eventoBotonBuscar();
+		
+		GridBagConstraints gbc_botonBuscar = new GridBagConstraints();
+		gbc_botonBuscar.insets = new Insets(0, 0, 5, 5);
+		gbc_botonBuscar.gridx = 3;
+		gbc_botonBuscar.gridy = 0;
+		panelExplorador.add(botonBuscar, gbc_botonBuscar);
 		
 		btnNewButton_1 = new JButton("Nueva Busqueda");
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
@@ -353,13 +373,16 @@ public class Principal extends Thread{
 		panelExplorador.add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
 		scrollPane = new JScrollPane();
+
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridheight = 4;
 		gbc_scrollPane.gridwidth = 3;
+		gbc_scrollPane.gridheight = 4;
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 2;
+
+		
 		panelExplorador.add(scrollPane, gbc_scrollPane);
 		
 		list = new JList();
