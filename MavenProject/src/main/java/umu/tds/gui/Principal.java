@@ -76,7 +76,6 @@ public class Principal extends Thread{
 	private JTextField textField_1;
 	private JButton btnNewButton;
 	private JScrollPane scrollPane_1;
-	private JPanel panel_1;
 	private JScrollPane scrollPane_2;
 	private JPanel panel_2;
 	private JSplitPane splitPane;
@@ -468,9 +467,9 @@ public class Principal extends Thread{
 		panelPrincipal.add(panelMisListas, "mislistas");
 		GridBagLayout gbl_panelMisListas = new GridBagLayout();
 		gbl_panelMisListas.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panelMisListas.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_panelMisListas.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_panelMisListas.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panelMisListas.setLayout(gbl_panelMisListas);
 		
 		lblNewLabel_1 = new JLabel("Buscar playlist : ");
@@ -501,14 +500,12 @@ public class Principal extends Thread{
 		scrollPane_1 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
 		gbc_scrollPane_1.gridwidth = 3;
-		gbc_scrollPane_1.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_1.gridx = 2;
 		gbc_scrollPane_1.gridy = 3;
 		panelMisListas.add(scrollPane_1, gbc_scrollPane_1);
-		
-		panel_1 = new JPanel();
-		scrollPane_1.setViewportView(panel_1);
+		scrollPane_1.setBounds(50, 50, 100, 25);
 		
 		panelRecientes = new JPanel();
 		panelPrincipal.add(panelRecientes, "recientes");
@@ -535,9 +532,9 @@ public class Principal extends Thread{
 		panel_3 = new JPanel();
 		splitPane.setLeftComponent(panel_3);
 		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{85, 86, 0};
-		gbl_panel_3.rowHeights = new int[]{20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_3.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_3.columnWidths = new int[] {10, 86, 0, 30, 0};
+		gbl_panel_3.rowHeights = new int[] {0, 0, 0, 30, 30, 30, 30, 30, 0, 0, 30, 0};
+		gbl_panel_3.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 		
@@ -545,39 +542,40 @@ public class Principal extends Thread{
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_3.gridx = 0;
+		gbc_lblNewLabel_3.gridx = 1;
 		gbc_lblNewLabel_3.gridy = 0;
 		panel_3.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		textField_2 = new JTextField();
 		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
 		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.gridx = 0;
+		gbc_textField_2.gridx = 1;
 		gbc_textField_2.gridy = 1;
 		panel_3.add(textField_2, gbc_textField_2);
 		textField_2.setColumns(10);
 		
 		btnNewButton_2 = new JButton("Buscar");
 		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_2.gridx = 1;
+		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_2.gridx = 2;
 		gbc_btnNewButton_2.gridy = 1;
 		panel_3.add(btnNewButton_2, gbc_btnNewButton_2);
 		
 		btnNewButton_5 = new JButton("Borrar");
 		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
 		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_5.gridx = 0;
+		gbc_btnNewButton_5.gridx = 1;
 		gbc_btnNewButton_5.gridy = 2;
 		panel_3.add(btnNewButton_5, gbc_btnNewButton_5);
 		
 		scrollPane_3 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_3 = new GridBagConstraints();
+		gbc_scrollPane_3.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane_3.ipadx = 10;
 		gbc_scrollPane_3.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_3.gridwidth = 2;
-		gbc_scrollPane_3.gridheight = 6;
-		gbc_scrollPane_3.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane_3.gridx = 0;
+		gbc_scrollPane_3.gridwidth = 3;
+		gbc_scrollPane_3.gridheight = 5;
+		gbc_scrollPane_3.gridx = 1;
 		gbc_scrollPane_3.gridy = 3;
 		panel_3.add(scrollPane_3, gbc_scrollPane_3);
 		
@@ -588,36 +586,36 @@ public class Principal extends Thread{
 		});
 		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
 		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_3.gridx = 0;
-		gbc_btnNewButton_3.gridy = 9;
+		gbc_btnNewButton_3.gridx = 1;
+		gbc_btnNewButton_3.gridy = 8;
 		panel_3.add(btnNewButton_3, gbc_btnNewButton_3);
 		
 		btnQuitar = new JButton("Quitar");
 		GridBagConstraints gbc_btnQuitar = new GridBagConstraints();
-		gbc_btnQuitar.insets = new Insets(0, 0, 5, 0);
-		gbc_btnQuitar.gridx = 1;
-		gbc_btnQuitar.gridy = 9;
+		gbc_btnQuitar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnQuitar.gridx = 2;
+		gbc_btnQuitar.gridy = 8;
 		panel_3.add(btnQuitar, gbc_btnQuitar);
 		
 		btnNewButton_4 = new JButton("Aceptar");
 		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
-		gbc_btnNewButton_4.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_4.gridx = 0;
-		gbc_btnNewButton_4.gridy = 10;
+		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_4.gridx = 1;
+		gbc_btnNewButton_4.gridy = 9;
 		panel_3.add(btnNewButton_4, gbc_btnNewButton_4);
 		
 		panel_4 = new JPanel();
 		splitPane.setRightComponent(panel_4);
 		GridBagLayout gbl_panel_4 = new GridBagLayout();
-		gbl_panel_4.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_panel_4.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gbl_panel_4.columnWeights = new double[]{0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_4.columnWidths = new int[] {30, 0, 10, 30, 0, 30, 0};
+		gbl_panel_4.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_4.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel_4.setLayout(gbl_panel_4);
 		
 		lblNewLabel_13 = new JLabel("Buscar titulo:");
 		GridBagConstraints gbc_lblNewLabel_13 = new GridBagConstraints();
-		gbc_lblNewLabel_13.anchor = GridBagConstraints.EAST;
+		gbc_lblNewLabel_13.anchor = GridBagConstraints.SOUTHEAST;
 		gbc_lblNewLabel_13.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_13.gridx = 1;
 		gbc_lblNewLabel_13.gridy = 1;
@@ -625,19 +623,13 @@ public class Principal extends Thread{
 		
 		textField_3 = new JTextField();
 		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
+		gbc_textField_3.gridwidth = 3;
 		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_3.gridx = 2;
 		gbc_textField_3.gridy = 1;
 		panel_4.add(textField_3, gbc_textField_3);
 		textField_3.setColumns(10);
-		
-		btnNewButton_6 = new JButton("Buscar");
-		GridBagConstraints gbc_btnNewButton_6 = new GridBagConstraints();
-		gbc_btnNewButton_6.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_6.gridx = 3;
-		gbc_btnNewButton_6.gridy = 1;
-		panel_4.add(btnNewButton_6, gbc_btnNewButton_6);
 		
 		btnNewButton_7 = new JButton("Nueva Busqueda");
 		btnNewButton_7.addActionListener(new ActionListener() {
@@ -646,14 +638,22 @@ public class Principal extends Thread{
 		});
 		GridBagConstraints gbc_btnNewButton_7 = new GridBagConstraints();
 		gbc_btnNewButton_7.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_7.gridx = 2;
+		gbc_btnNewButton_7.gridx = 1;
 		gbc_btnNewButton_7.gridy = 2;
 		panel_4.add(btnNewButton_7, gbc_btnNewButton_7);
 		
+		btnNewButton_6 = new JButton("Buscar");
+		GridBagConstraints gbc_btnNewButton_6 = new GridBagConstraints();
+		gbc_btnNewButton_6.anchor = GridBagConstraints.EAST;
+		gbc_btnNewButton_6.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_6.gridx = 4;
+		gbc_btnNewButton_6.gridy = 2;
+		panel_4.add(btnNewButton_6, gbc_btnNewButton_6);
+		
 		scrollPane_4 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_4 = new GridBagConstraints();
-		gbc_scrollPane_4.gridwidth = 2;
-		gbc_scrollPane_4.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane_4.gridwidth = 4;
+		gbc_scrollPane_4.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane_4.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_4.gridx = 1;
 		gbc_scrollPane_4.gridy = 3;
