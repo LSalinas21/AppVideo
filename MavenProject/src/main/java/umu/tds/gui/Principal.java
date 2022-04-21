@@ -466,9 +466,9 @@ public class Principal extends Thread{
 		panelMisListas = new JPanel();
 		panelPrincipal.add(panelMisListas, "mislistas");
 		GridBagLayout gbl_panelMisListas = new GridBagLayout();
-		gbl_panelMisListas.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panelMisListas.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_panelMisListas.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelMisListas.columnWidths = new int[]{0, 50, 79, 0, 0, 50, 0, 0, 0, 0};
+		gbl_panelMisListas.rowHeights = new int[]{10, 0, 0, 0, 10, 0};
+		gbl_panelMisListas.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panelMisListas.setLayout(gbl_panelMisListas);
 		
@@ -533,9 +533,9 @@ public class Principal extends Thread{
 		splitPane.setLeftComponent(panel_3);
 		GridBagLayout gbl_panel_3 = new GridBagLayout();
 		gbl_panel_3.columnWidths = new int[] {10, 86, 0, 30, 0};
-		gbl_panel_3.rowHeights = new int[] {0, 0, 0, 30, 30, 30, 30, 30, 0, 0, 30, 0};
+		gbl_panel_3.rowHeights = new int[] {5, 0, 0, 0, 30, 30, 30, 30, 30, 0, 0, 30, 0};
 		gbl_panel_3.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 		
 		lblNewLabel_3 = new JLabel("  Nombre de la lista:");
@@ -543,14 +543,14 @@ public class Principal extends Thread{
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_3.gridx = 1;
-		gbc_lblNewLabel_3.gridy = 0;
+		gbc_lblNewLabel_3.gridy = 1;
 		panel_3.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		textField_2 = new JTextField();
 		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
 		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_2.gridx = 1;
-		gbc_textField_2.gridy = 1;
+		gbc_textField_2.gridy = 2;
 		panel_3.add(textField_2, gbc_textField_2);
 		textField_2.setColumns(10);
 		
@@ -558,25 +558,25 @@ public class Principal extends Thread{
 		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
 		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_2.gridx = 2;
-		gbc_btnNewButton_2.gridy = 1;
+		gbc_btnNewButton_2.gridy = 2;
 		panel_3.add(btnNewButton_2, gbc_btnNewButton_2);
 		
 		btnNewButton_5 = new JButton("Borrar");
 		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
 		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_5.gridx = 1;
-		gbc_btnNewButton_5.gridy = 2;
+		gbc_btnNewButton_5.gridy = 3;
 		panel_3.add(btnNewButton_5, gbc_btnNewButton_5);
 		
 		scrollPane_3 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_3 = new GridBagConstraints();
-		gbc_scrollPane_3.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane_3.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollPane_3.ipadx = 10;
 		gbc_scrollPane_3.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_3.gridwidth = 3;
 		gbc_scrollPane_3.gridheight = 5;
 		gbc_scrollPane_3.gridx = 1;
-		gbc_scrollPane_3.gridy = 3;
+		gbc_scrollPane_3.gridy = 4;
 		panel_3.add(scrollPane_3, gbc_scrollPane_3);
 		
 		btnNewButton_3 = new JButton("Añadir");
@@ -587,28 +587,28 @@ public class Principal extends Thread{
 		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
 		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_3.gridx = 1;
-		gbc_btnNewButton_3.gridy = 8;
+		gbc_btnNewButton_3.gridy = 9;
 		panel_3.add(btnNewButton_3, gbc_btnNewButton_3);
 		
 		btnQuitar = new JButton("Quitar");
 		GridBagConstraints gbc_btnQuitar = new GridBagConstraints();
 		gbc_btnQuitar.insets = new Insets(0, 0, 5, 5);
 		gbc_btnQuitar.gridx = 2;
-		gbc_btnQuitar.gridy = 8;
+		gbc_btnQuitar.gridy = 9;
 		panel_3.add(btnQuitar, gbc_btnQuitar);
 		
 		btnNewButton_4 = new JButton("Aceptar");
 		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
 		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_4.gridx = 1;
-		gbc_btnNewButton_4.gridy = 9;
+		gbc_btnNewButton_4.gridy = 10;
 		panel_3.add(btnNewButton_4, gbc_btnNewButton_4);
 		
 		panel_4 = new JPanel();
 		splitPane.setRightComponent(panel_4);
 		GridBagLayout gbl_panel_4 = new GridBagLayout();
 		gbl_panel_4.columnWidths = new int[] {30, 0, 10, 30, 0, 30, 0};
-		gbl_panel_4.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_4.rowHeights = new int[]{5, 0, 0, 0, 0, 0};
 		gbl_panel_4.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel_4.setLayout(gbl_panel_4);
