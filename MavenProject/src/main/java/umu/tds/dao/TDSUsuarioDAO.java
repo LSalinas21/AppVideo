@@ -22,6 +22,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String NICK = "nick";
 	private static final String PASSWORD = "password";
 	private static final String FECHA_NACIMIENTO = "fechaNacimiento";
+	private static final String RECIENTE = "videosRecientes";
 
 	private ServicioPersistencia servPersistencia;
 	private SimpleDateFormat dateFormat;
@@ -39,6 +40,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, NICK);
 		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, PASSWORD);
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
+		String videosRecientes = servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTE);
 
 		Usuario usuario = new Usuario(nombre, apellidos, email, login, password, fechaNacimiento);
 		usuario.setId(eUsuario.getId());
@@ -53,8 +55,15 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(NICK, usuario.getNick()), new Propiedad(PASSWORD, usuario.getPassword()),
-				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()))));
+				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()),new Propiedad(RECIENTE,codificarVideos(usuario.getVideosRecientes())))));
 		return eUsuario;
+	}
+
+	private String codificarVideos(List videosRecientes) {
+		// TODO Auto-generated method stub
+		String codigos = "";
+		for(PlayList recientes: videosRecientes)
+		return null;
 	}
 
 	public void create(Usuario usuario) {

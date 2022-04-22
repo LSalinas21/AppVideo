@@ -1,6 +1,10 @@
 package umu.tds.controlador;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
@@ -15,6 +19,8 @@ public class Controlador {
 	private Usuario usuarioActual;
 	private static Controlador unicaInstancia;
 	private FactoriaDAO factoria;
+	private static final int SIZE = 5;
+	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
 	
 	private Controlador() {
 		usuarioActual = null;
@@ -77,6 +83,27 @@ public class Controlador {
 	public ArrayList<Video> buscarMisListas(String lista){
 		
 		return usuarioActual.getLista(lista);
+	}
+	
+	public void addReciente(Video v) {
+		List listaRecientes = new LinkedList<Video>(recientes);
+		listaRecientes = usuarioActual.getVideosRecientes();
+		
+		if (listaRecientes.contains(v)) {
+			listaRecientes.remove(v);
+			listaRecientes.add(0, v);
+		}else {
+			if (listaRecientes.size()<5) {
+				listaRecientes.add(0,v);
+			}else {
+				listaRecientes.remove(SIZE-1);
+				listaRecientes.add(0, v);
+			}
+		}
+		
+		usuarioActual.setVideosRecientes(listaRecientes);
+		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO();
+		usuarioDAO.update(usuarioActual);
 	}
 
 }

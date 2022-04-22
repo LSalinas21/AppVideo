@@ -2,10 +2,12 @@ package umu.tds.dominio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-public class Usuario {
-	
+public class Usuario<playListReciente> {
+
 	private int id;
 	private String nombre;
 	private String apellidos;
@@ -13,19 +15,24 @@ public class Usuario {
 	private String nick;
 	private String password;
 	private String fechaNacimiento;
-	private Map<String,ArrayList<Video>> misListas;
-	
+	private Map<String, ArrayList<Video>> misListas;
+	private List<Video> recientes;
+
 	public Usuario(String nombre, String apellido, String email, String nick, String password, String fechaNacimiento) {
-		
+
 		this.nombre = nombre;
 		this.apellidos = apellido;
 		this.email = email;
 		this.nick = nick;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
-		misListas = new HashMap<String,ArrayList<Video>>();
-		
-		
+		misListas = new HashMap<String, ArrayList<Video>>();
+		recientes = new LinkedList<Video>();
+
+	}
+
+	public List<Video> getVideosRecientes() {
+		return recientes;
 	}
 
 	public String getNombre() {
@@ -83,21 +90,25 @@ public class Usuario {
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public ArrayList<Video> getLista(String nombreLista) {
-		
-		if(misListas.containsKey(nombreLista)) {
-			
+
+		if (misListas.containsKey(nombreLista)) {
+
 			return misListas.get(nombreLista);
-		}else {
-			
+		} else {
+
 			return null;
 		}
 	}
+
 	public void creaListaRep(String nombreLista, ArrayList<Video> listaVideos) {
-		
+
 		misListas.put(nombreLista, listaVideos);
 	}
-	
-	
+
+	public void setVideosRecientes(List listaRecientes) {
+		this.recientes = listaRecientes;
+	}
 
 }
