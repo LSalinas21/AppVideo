@@ -76,11 +76,7 @@ public class Controlador {
 	}
 	public ArrayList<Video> buscarMisListas(String lista){
 		
-		ArrayList<Video> listaVideos = usuarioActual.getLista(lista);
-		if(listaVideos == null)
-			return null;
-		else
-			return listaVideos;
+		return usuarioActual.getLista(lista);
 	}
 
 }

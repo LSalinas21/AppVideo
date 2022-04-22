@@ -27,6 +27,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
@@ -95,6 +96,8 @@ public class Principal extends Thread{
 	private JTextField textField_3;
 	private JButton btnNewButton_7;
 	private JScrollPane scrollPane_4;
+	private JPanel panelMisListasBuscadas;
+	private JScrollBar scrollBarMisListas;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -511,6 +514,18 @@ public class Principal extends Thread{
 		panelMisListas.add(scrollPaneMisListas, gbc_scrollPaneMisListas);
 		scrollPaneMisListas.setBounds(50, 50, 100, 25);
 		
+		panelMisListasBuscadas = new JPanel();
+		scrollPaneMisListas.setViewportView(panelMisListasBuscadas);
+		GridBagLayout gbl_panelMisListasBuscadas = new GridBagLayout();
+		gbl_panelMisListasBuscadas.columnWidths = new int[]{0, 0};
+		gbl_panelMisListasBuscadas.rowHeights = new int[]{0, 0};
+		gbl_panelMisListasBuscadas.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panelMisListasBuscadas.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panelMisListasBuscadas.setLayout(gbl_panelMisListasBuscadas);
+		
+		scrollBarMisListas = new JScrollBar();
+		panelMisListasBuscadas.add(scrollBarMisListas);
+		
 		panelRecientes = new JPanel();
 		panelPrincipal.add(panelRecientes, "recientes");
 		panelRecientes.setLayout(new BorderLayout(0, 0));
@@ -671,8 +686,18 @@ public class Principal extends Thread{
 			
 				ArrayList<Video> misListas;
 				misListas = Controlador.getUnicaInstancia().buscarMisListas(textAreaBuscarMisListas.getText());
+				mostrarListasBuscadas(misListas);
 			}
 		});
+	}
+	private void mostrarListasBuscadas(ArrayList<Video> lista) {
+		
+		HashMap<JLabel,Video> labels = new HashMap<JLabel,Video>();
+		for (int i = 0; i < lista.size(); i++) {
+				JLabel l = new JLabel(String.valueOf(lista.get(i).getTitulo()));
+				panelMisListasBuscadas.add(l, i);
+				labels.put(l,lista.get(i));
+		}
 	}
 
 }

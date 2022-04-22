@@ -1,17 +1,21 @@
 package umu.tds.dominio;
 
+import java.util.ArrayList;
+
 public class Video {
 	
 	private String url;
 	private String titulo;
 	private int numRepro;
 	private int id;
+	private ArrayList<Etiqueta> listaEtiquetas;
 	
 	public Video(String url, String titulo, int numRepro) {
 		
 		this.url = url;
 		this.titulo = titulo;
 		this.numRepro = numRepro;
+		listaEtiquetas = new ArrayList<Etiqueta>();
 	}
 
 	public String getUrl() {
@@ -45,6 +49,10 @@ public class Video {
 	public void setId(int id) {
 		
 		this.id = id;
+	}
+	public void agregarEtiqueta(Etiqueta etiqueta) {
+		
+		listaEtiquetas.add(etiqueta);
 	}
 	
 	
