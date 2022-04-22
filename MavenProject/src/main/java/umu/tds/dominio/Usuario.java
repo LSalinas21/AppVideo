@@ -1,5 +1,9 @@
 package umu.tds.dominio;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Usuario {
 	
 	private int id;
@@ -9,6 +13,7 @@ public class Usuario {
 	private String nick;
 	private String password;
 	private String fechaNacimiento;
+	private Map<String,ArrayList<Video>> misListas;
 	
 	public Usuario(String nombre, String apellido, String email, String nick, String password, String fechaNacimiento) {
 		
@@ -18,6 +23,7 @@ public class Usuario {
 		this.nick = nick;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
+		misListas = new HashMap<String,ArrayList<Video>>();
 		
 		
 	}
@@ -76,6 +82,20 @@ public class Usuario {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	public ArrayList<Video> getLista(String nombreLista) {
+		
+		if(misListas.containsKey(nombreLista)) {
+			
+			return misListas.get(nombreLista);
+		}else {
+			
+			return null;
+		}
+	}
+	public void creaListaRep(String nombreLista, ArrayList<Video> listaVideos) {
+		
+		misListas.put(nombreLista, listaVideos);
 	}
 	
 	

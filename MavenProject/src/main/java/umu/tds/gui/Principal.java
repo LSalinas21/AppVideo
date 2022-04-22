@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import umu.tds.controlador.Controlador;
+import umu.tds.dominio.Video;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -72,10 +73,10 @@ public class Principal extends Thread{
 	private JLabel lblNewLabel_11;
 	private JLabel lblNewLabel_12;
 	private JScrollBar scrollBar;
-	private JLabel lblNewLabel_1;
-	private JTextField textField_1;
-	private JButton btnNewButton;
-	private JScrollPane scrollPane_1;
+	private JLabel buscarPlaylist;
+	private JTextField textAreaBuscarMisListas;
+	private JButton botonBuscarMisListas;
+	private JScrollPane scrollPaneMisListas;
 	private JScrollPane scrollPane_2;
 	private JPanel panel_2;
 	private JSplitPane splitPane;
@@ -472,40 +473,43 @@ public class Principal extends Thread{
 		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panelMisListas.setLayout(gbl_panelMisListas);
 		
-		lblNewLabel_1 = new JLabel("Buscar playlist : ");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
-		gbc_lblNewLabel_1.gridx = 2;
-		gbc_lblNewLabel_1.gridy = 1;
-		panelMisListas.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		buscarPlaylist = new JLabel("Buscar playlist : ");
+		GridBagConstraints gbc_buscarPlaylist = new GridBagConstraints();
+		gbc_buscarPlaylist.insets = new Insets(0, 0, 5, 5);
+		gbc_buscarPlaylist.anchor = GridBagConstraints.EAST;
+		gbc_buscarPlaylist.gridx = 2;
+		gbc_buscarPlaylist.gridy = 1;
+		panelMisListas.add(buscarPlaylist, gbc_buscarPlaylist);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 3;
-		gbc_textField_1.gridy = 1;
-		panelMisListas.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		textAreaBuscarMisListas = new JTextField();
+		GridBagConstraints gbc_textAreaBuscarMisListas = new GridBagConstraints();
+		gbc_textAreaBuscarMisListas.insets = new Insets(0, 0, 5, 5);
+		gbc_textAreaBuscarMisListas.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textAreaBuscarMisListas.gridx = 3;
+		gbc_textAreaBuscarMisListas.gridy = 1;
+		panelMisListas.add(textAreaBuscarMisListas, gbc_textAreaBuscarMisListas);
+		textAreaBuscarMisListas.setColumns(10);
 		
-		btnNewButton = new JButton("Buscar");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 4;
-		gbc_btnNewButton.gridy = 1;
-		panelMisListas.add(btnNewButton, gbc_btnNewButton);
+		botonBuscarMisListas = new JButton("Buscar");
 		
-		scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.gridwidth = 3;
-		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_1.gridx = 2;
-		gbc_scrollPane_1.gridy = 3;
-		panelMisListas.add(scrollPane_1, gbc_scrollPane_1);
-		scrollPane_1.setBounds(50, 50, 100, 25);
+		eventoBotonBuscarMisListas();
+		
+		GridBagConstraints gbc_botonBuscarMisListas = new GridBagConstraints();
+		gbc_botonBuscarMisListas.anchor = GridBagConstraints.NORTH;
+		gbc_botonBuscarMisListas.insets = new Insets(0, 0, 5, 5);
+		gbc_botonBuscarMisListas.gridx = 4;
+		gbc_botonBuscarMisListas.gridy = 1;
+		panelMisListas.add(botonBuscarMisListas, gbc_botonBuscarMisListas);
+		
+		scrollPaneMisListas = new JScrollPane();
+		GridBagConstraints gbc_scrollPaneMisListas = new GridBagConstraints();
+		gbc_scrollPaneMisListas.gridwidth = 3;
+		gbc_scrollPaneMisListas.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPaneMisListas.fill = GridBagConstraints.BOTH;
+		gbc_scrollPaneMisListas.gridx = 2;
+		gbc_scrollPaneMisListas.gridy = 3;
+		panelMisListas.add(scrollPaneMisListas, gbc_scrollPaneMisListas);
+		scrollPaneMisListas.setBounds(50, 50, 100, 25);
 		
 		panelRecientes = new JPanel();
 		panelPrincipal.add(panelRecientes, "recientes");
@@ -659,6 +663,16 @@ public class Principal extends Thread{
 		gbc_scrollPane_4.gridy = 3;
 		panel_4.add(scrollPane_4, gbc_scrollPane_4);
 		
+	}
+	private void eventoBotonBuscarMisListas() {
+		
+		botonBuscarMisListas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+				ArrayList<Video> misListas;
+				misListas = Controlador.getUnicaInstancia().buscarMisListas(textAreaBuscarMisListas.getText());
+			}
+		});
 	}
 
 }

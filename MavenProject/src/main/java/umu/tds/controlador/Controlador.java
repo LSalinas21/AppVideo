@@ -1,10 +1,14 @@
 package umu.tds.controlador;
 
+import java.util.ArrayList;
+
 import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
 import umu.tds.dao.UsuarioDAO;
 import umu.tds.dominio.CatalogoUsuarios;
+import umu.tds.dominio.CatalogoVideos;
 import umu.tds.dominio.Usuario;
+import umu.tds.dominio.Video;
 
 public class Controlador {
 	
@@ -69,6 +73,14 @@ public class Controlador {
 		
 		usuarioActual = null;
 		return true;
+	}
+	public ArrayList<Video> buscarMisListas(String lista){
+		
+		ArrayList<Video> listaVideos = usuarioActual.getLista(lista);
+		if(listaVideos == null)
+			return null;
+		else
+			return listaVideos;
 	}
 
 }
