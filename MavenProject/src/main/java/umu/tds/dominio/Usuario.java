@@ -15,7 +15,7 @@ public class Usuario<playListReciente> {
 	private String nick;
 	private String password;
 	private String fechaNacimiento;
-	private Map<String, ArrayList<Video>> misListas;
+	private List<PlayList> misListas;
 	private List<Video> recientes;
 
 	public Usuario(String nombre, String apellido, String email, String nick, String password, String fechaNacimiento) {
@@ -26,7 +26,7 @@ public class Usuario<playListReciente> {
 		this.nick = nick;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
-		misListas = new HashMap<String, ArrayList<Video>>();
+		misListas = new ArrayList<PlayList>();
 		recientes = new LinkedList<Video>();
 
 	}
@@ -91,20 +91,24 @@ public class Usuario<playListReciente> {
 		this.id = id;
 	}
 
-	public ArrayList<Video> getLista(String nombreLista) {
+	public List<PlayList> getMisListas() {
 
-		if (misListas.containsKey(nombreLista)) {
-
-			return misListas.get(nombreLista);
-		} else {
-
-			return null;
+		return misListas;
+	}
+	public List<Video> getPlayList(String nombre) {
+		
+		for(PlayList l: misListas) {
+			
+			if(l.getNombre().equals(nombre))
+				return l.getVideos();
 		}
+		return null;
 	}
 
 	public void creaListaRep(String nombreLista, ArrayList<Video> listaVideos) {
-
-		misListas.put(nombreLista, listaVideos);
+		
+		PlayList lista = new PlayList(nombreLista, listaVideos);
+		misListas.add(lista);
 	}
 
 	public void setVideosRecientes(List listaRecientes) {

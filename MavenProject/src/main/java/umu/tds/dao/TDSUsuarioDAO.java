@@ -55,17 +55,17 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(NICK, usuario.getNick()), new Propiedad(PASSWORD, usuario.getPassword()),
-				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()),new Propiedad(RECIENTE,codificarVideos(usuario.getVideosRecientes())))));
+				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()))));//,new Propiedad(RECIENTE,codificarVideos(usuario.getVideosRecientes())))));
 		return eUsuario;
 	}
-
+/*
 	private String codificarVideos(List videosRecientes) {
 		// TODO Auto-generated method stub
 		String codigos = "";
 		for(PlayList recientes: videosRecientes)
 		return null;
 	}
-
+*/
 	public void create(Usuario usuario) {
 		Entidad eUsuario = this.usuarioToEntidad(usuario);
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);

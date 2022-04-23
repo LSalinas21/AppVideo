@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
@@ -44,6 +45,8 @@ import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JScrollBar;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
+import java.awt.Color;
 
 public class Principal extends Thread{
 
@@ -77,7 +80,6 @@ public class Principal extends Thread{
 	private JLabel buscarPlaylist;
 	private JTextField textAreaBuscarMisListas;
 	private JButton botonBuscarMisListas;
-	private JScrollPane scrollPaneMisListas;
 	private JScrollPane scrollPane_2;
 	private JPanel panel_2;
 	private JSplitPane splitPane;
@@ -96,8 +98,9 @@ public class Principal extends Thread{
 	private JTextField textField_3;
 	private JButton btnNewButton_7;
 	private JScrollPane scrollPane_4;
-	private JPanel panelMisListasBuscadas;
 	private JScrollBar scrollBarMisListas;
+	private JPanel panelMisListasBuscadas;
+	private JList lista;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -504,27 +507,35 @@ public class Principal extends Thread{
 		gbc_botonBuscarMisListas.gridy = 1;
 		panelMisListas.add(botonBuscarMisListas, gbc_botonBuscarMisListas);
 		
-		scrollPaneMisListas = new JScrollPane();
-		GridBagConstraints gbc_scrollPaneMisListas = new GridBagConstraints();
-		gbc_scrollPaneMisListas.gridwidth = 3;
-		gbc_scrollPaneMisListas.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPaneMisListas.fill = GridBagConstraints.BOTH;
-		gbc_scrollPaneMisListas.gridx = 2;
-		gbc_scrollPaneMisListas.gridy = 3;
-		panelMisListas.add(scrollPaneMisListas, gbc_scrollPaneMisListas);
-		scrollPaneMisListas.setBounds(50, 50, 100, 25);
-		
 		panelMisListasBuscadas = new JPanel();
-		scrollPaneMisListas.setViewportView(panelMisListasBuscadas);
-		GridBagLayout gbl_panelMisListasBuscadas = new GridBagLayout();
-		gbl_panelMisListasBuscadas.columnWidths = new int[]{0, 0};
-		gbl_panelMisListasBuscadas.rowHeights = new int[]{0, 0};
-		gbl_panelMisListasBuscadas.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panelMisListasBuscadas.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		panelMisListasBuscadas.setLayout(gbl_panelMisListasBuscadas);
+		panelMisListasBuscadas.setLayout(new FlowLayout());
+		panelMisListasBuscadas.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		panelMisListasBuscadas.setPreferredSize(new Dimension(50,50));
 		
-		scrollBarMisListas = new JScrollBar();
-		panelMisListasBuscadas.add(scrollBarMisListas);
+		lista = new JList();
+		String[] data = new String[1000];
+		
+		for (int i = 0; i < 1000; i++) {
+			data[i] = new String(String.valueOf(i));
+		}
+		JList<String> a = new JList<String>(data);
+		
+		
+		//lista.setModel(a);
+		
+		JScrollPane panelBuscadas = new JScrollPane(a);
+		panelBuscadas.setPreferredSize(new Dimension(350,285));
+		
+		
+		GridBagConstraints gbc_panelMisListasBuscadas = new GridBagConstraints();
+		gbc_panelMisListasBuscadas.insets = new Insets(0, 0, 5, 5);
+		gbc_panelMisListasBuscadas.fill = GridBagConstraints.BOTH;
+		gbc_panelMisListasBuscadas.gridx = 3;
+		gbc_panelMisListasBuscadas.gridy = 3;
+		
+		
+		panelMisListasBuscadas.add(panelBuscadas);
+		panelMisListas.add(panelMisListasBuscadas, gbc_panelMisListasBuscadas);
 		
 		panelRecientes = new JPanel();
 		panelPrincipal.add(panelRecientes, "recientes");
@@ -684,13 +695,13 @@ public class Principal extends Thread{
 		botonBuscarMisListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				ArrayList<Video> misListas;
+				List<Video> misListas;
 				misListas = Controlador.getUnicaInstancia().buscarMisListas(textAreaBuscarMisListas.getText());
 				mostrarListasBuscadas(misListas);
 			}
 		});
 	}
-	private void mostrarListasBuscadas(ArrayList<Video> lista) {
+	private void mostrarListasBuscadas(List<Video> lista) {
 		
 		HashMap<JLabel,Video> labels = new HashMap<JLabel,Video>();
 		for (int i = 0; i < lista.size(); i++) {

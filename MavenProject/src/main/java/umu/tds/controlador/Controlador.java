@@ -23,7 +23,8 @@ public class Controlador {
 	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
 	
 	private Controlador() {
-		usuarioActual = null;
+		Usuario a = new Usuario("aaa","aaa","aaa","aaa","aaa","aaa");
+		usuarioActual = a;
 		try {
 			factoria = FactoriaDAO.getInstancia();
 		} catch (DAOException e) {
@@ -80,9 +81,9 @@ public class Controlador {
 		usuarioActual = null;
 		return true;
 	}
-	public ArrayList<Video> buscarMisListas(String lista){
+	public List<Video> buscarMisListas(String lista){
 		
-		return usuarioActual.getLista(lista);
+		return usuarioActual.getPlayList(lista);
 	}
 	
 	public void addReciente(Video v) {
