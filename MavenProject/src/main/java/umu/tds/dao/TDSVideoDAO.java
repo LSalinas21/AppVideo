@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import umu.tds.dominio.Etiqueta;
 import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
 
@@ -19,6 +21,7 @@ public class TDSVideoDAO implements VideoDAO{
 	private static final String URL = "url";
 	private static final String TITULO = "titulo";
 	private static final String NUM_REPRO = "numRepro";
+	private static final String ETIQUETAS = "etiquetas";
 	
 	private ServicioPersistencia servPersistencia;
 	
@@ -33,8 +36,9 @@ public class TDSVideoDAO implements VideoDAO{
 		String url = servPersistencia.recuperarPropiedadEntidad(eVideo, URL);
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, TITULO);
 		String numRepro = servPersistencia.recuperarPropiedadEntidad(eVideo, NUM_REPRO);
+		String etiquetas = servPersistencia.recuperarPropiedadEntidad(eVideo, ETIQUETAS);
 		
-		Video video = new Video(url, titulo, Integer.parseInt(numRepro));
+		Video video = new Video(url, titulo, Integer.parseInt(numRepro), obtenerEtiquetas(etiquetas));
 		video.setId(eVideo.getId());
 		return video;
 	}
@@ -46,7 +50,9 @@ public class TDSVideoDAO implements VideoDAO{
 
 		eVideo.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(URL, video.getUrl()),
 				new Propiedad(TITULO, video.getTitulo()), 
-				new Propiedad(NUM_REPRO, String.valueOf(video.getNumRepro())))));
+				new Propiedad(NUM_REPRO, String.valueOf(video.getNumRepro())),
+				new Propiedad(ETIQUETAS, obtenerCadenaEtiquetas(video.getEtiquetas())))));
+		
 		return eVideo;
 	}
 	
@@ -98,6 +104,32 @@ public class TDSVideoDAO implements VideoDAO{
 			servPersistencia.modificarPropiedad(prop);
 		}
 		
+	}
+	private ArrayList<Etiqueta> obtenerEtiquetas(String etiquetas){
+		
+		ArrayList<Etiqueta> listaEtiquetas = new ArrayList<Etiqueta>();
+		
+		StringTokenizer strTok = new StringTokenizer(etiquetas, ",");
+		
+		while (strTok.hasMoreTokens()) {
+			
+			String nomEtiqueta = (String) strTok.nextElement();
+			try {
+				Etiqueta etiqueta = new Etiqueta(nomEtiqueta);
+				listaEtiquetas.add(etiqueta);
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return listaEtiquetas;
+	}
+	private String obtenerCadenaEtiquetas(ArrayList<Etiqueta> etiquetas) {
+		
+		String lineas = "";
+		for (Etiqueta etiqueta : etiquetas) {
+			lineas += etiqueta.getNombre() + ",";
+		}
+		return lineas.trim();
 	}
 
 

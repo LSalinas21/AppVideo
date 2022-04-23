@@ -8,6 +8,10 @@ public class Etiqueta {
 		
 		this.nombre = nombre;
 	}
+	public Etiqueta() {
+		
+		this.nombre = "";
+	}
 
 	public String getNombre() {
 		return nombre;

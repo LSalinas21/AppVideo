@@ -17,6 +17,14 @@ public class Video {
 		this.numRepro = numRepro;
 		listaEtiquetas = new ArrayList<Etiqueta>();
 	}
+	
+	public Video(String url, String titulo, int numRepro, ArrayList<Etiqueta> etiquetas) {
+		
+		this.url = url;
+		this.titulo = titulo;
+		this.numRepro = numRepro;
+		listaEtiquetas = etiquetas;
+	}
 
 	public String getUrl() {
 		return url;
@@ -53,6 +61,10 @@ public class Video {
 	public void agregarEtiqueta(Etiqueta etiqueta) {
 		
 		listaEtiquetas.add(etiqueta);
+	}
+	public ArrayList<Etiqueta> getEtiquetas(){
+		
+		return listaEtiquetas;
 	}
 	
 	
