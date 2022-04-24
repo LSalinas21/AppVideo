@@ -91,9 +91,17 @@ public class Usuario<playListReciente> {
 		this.id = id;
 	}
 
-	public List<PlayList> getMisListas() {
-
-		return misListas;
+	public String[] getMisListas() {
+		
+		String[] playList = new String[misListas.size()+1];
+		playList[0] = "---Selecciona---";
+		int i = 1;
+		for(PlayList pl: misListas) {
+			
+			playList[i] = pl.getNombre();
+			i++;
+		}
+		return playList;
 	}
 	public ArrayList<String> getPlayList(String nombre) {
 		

@@ -51,8 +51,12 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
-public class Principal extends Thread{
+public class Principal<E> extends Thread{
 
 	private JPanel panelCabecera,panelUsuario,panelLogo,panelName,panelBotones,panelAcciones;
 	private JPanel panelLogReg,panelLogout,panelPremiun,panelSeccion,panelExplorador,panelMisListas;
@@ -82,8 +86,7 @@ public class Principal extends Thread{
 	private JLabel lblNewLabel_12;
 	private JScrollBar scrollBar;
 	private JLabel buscarPlaylist;
-	private JTextField textAreaBuscarMisListas;
-	private JButton botonBuscarMisListas;
+	private JComboBox textAreaBuscarMisListas;
 	private JScrollPane scrollPane_2;
 	private JPanel panel_2;
 	private JSplitPane splitPane;
@@ -106,6 +109,11 @@ public class Principal extends Thread{
 	private JPanel panelMisListasBuscadas;
 	private JList lista;
 	private JScrollPane panelBuscadas;
+	private JList<? extends E> list_2;
+	private JLabel lblNewLabel_1;
+	private JTextField textField_1;
+	private JButton btnNewButton;
+	private JLabel lblNewLabel_14;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -484,39 +492,44 @@ public class Principal extends Thread{
 		panelMisListas = new JPanel();
 		panelPrincipal.add(panelMisListas, "mislistas");
 		GridBagLayout gbl_panelMisListas = new GridBagLayout();
-		gbl_panelMisListas.columnWidths = new int[]{0, 50, 79, 0, 0, 50, 0, 0, 0, 0};
-		gbl_panelMisListas.rowHeights = new int[]{10, 0, 0, 0, 10, 0};
-		gbl_panelMisListas.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panelMisListas.columnWidths = new int[]{10, 50, 79, 0, 0, 50, 20, 0, 0, 0};
+		gbl_panelMisListas.rowHeights = new int[]{10, 0, 0, 0, 0, 10, 0};
+		gbl_panelMisListas.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panelMisListas.setLayout(gbl_panelMisListas);
 		
-		buscarPlaylist = new JLabel("Buscar playlist : ");
+		buscarPlaylist = new JLabel("Seleccionar playlist : ");
 		GridBagConstraints gbc_buscarPlaylist = new GridBagConstraints();
 		gbc_buscarPlaylist.insets = new Insets(0, 0, 5, 5);
 		gbc_buscarPlaylist.anchor = GridBagConstraints.EAST;
-		gbc_buscarPlaylist.gridx = 2;
+		gbc_buscarPlaylist.gridx = 1;
 		gbc_buscarPlaylist.gridy = 1;
 		panelMisListas.add(buscarPlaylist, gbc_buscarPlaylist);
 		
-		textAreaBuscarMisListas = new JTextField();
+		textAreaBuscarMisListas = new JComboBox();
+		textAreaBuscarMisListas.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					
+					if(e.getItem().toString() != "---Selecciona---") {
+						
+						mostarVideosLista(e.getItem().toString());
+					}else {
+						
+						videosMisListasBlanco();
+					}
+						
+				}
+			}
+		});
+		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(Controlador.getUnicaInstancia().getMisListas()));
 		GridBagConstraints gbc_textAreaBuscarMisListas = new GridBagConstraints();
 		gbc_textAreaBuscarMisListas.insets = new Insets(0, 0, 5, 5);
 		gbc_textAreaBuscarMisListas.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textAreaBuscarMisListas.gridx = 3;
+		gbc_textAreaBuscarMisListas.gridx = 2;
 		gbc_textAreaBuscarMisListas.gridy = 1;
 		panelMisListas.add(textAreaBuscarMisListas, gbc_textAreaBuscarMisListas);
-		textAreaBuscarMisListas.setColumns(10);
-		
-		botonBuscarMisListas = new JButton("Buscar");
-		
-		eventoBotonBuscarMisListas();
-		
-		GridBagConstraints gbc_botonBuscarMisListas = new GridBagConstraints();
-		gbc_botonBuscarMisListas.anchor = GridBagConstraints.NORTH;
-		gbc_botonBuscarMisListas.insets = new Insets(0, 0, 5, 5);
-		gbc_botonBuscarMisListas.gridx = 4;
-		gbc_botonBuscarMisListas.gridy = 1;
-		panelMisListas.add(botonBuscarMisListas, gbc_botonBuscarMisListas);
 		
 		panelMisListasBuscadas = new JPanel();
 		panelMisListasBuscadas.setLayout(new FlowLayout());
@@ -528,15 +541,56 @@ public class Principal extends Thread{
 		
 		
 		GridBagConstraints gbc_panelMisListasBuscadas = new GridBagConstraints();
+		gbc_panelMisListasBuscadas.gridwidth = 2;
+		gbc_panelMisListasBuscadas.gridheight = 3;
 		gbc_panelMisListasBuscadas.insets = new Insets(0, 0, 5, 5);
 		gbc_panelMisListasBuscadas.fill = GridBagConstraints.BOTH;
-		gbc_panelMisListasBuscadas.gridx = 3;
-		gbc_panelMisListasBuscadas.gridy = 3;
+		gbc_panelMisListasBuscadas.gridx = 1;
+		gbc_panelMisListasBuscadas.gridy = 2;
 		
 		panelBuscadas = new JScrollPane();
-		panelBuscadas.setPreferredSize(new Dimension(350,285));
+		panelBuscadas.setPreferredSize(new Dimension(340,285));
 		panelMisListasBuscadas.add(panelBuscadas);
 		panelMisListas.add(panelMisListasBuscadas, gbc_panelMisListasBuscadas);
+		
+		lblNewLabel_14 = new JLabel("Nueva etiqueta");
+		GridBagConstraints gbc_lblNewLabel_14 = new GridBagConstraints();
+		gbc_lblNewLabel_14.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_14.anchor = GridBagConstraints.EAST;
+		gbc_lblNewLabel_14.gridx = 5;
+		gbc_lblNewLabel_14.gridy = 2;
+		panelMisListas.add(lblNewLabel_14, gbc_lblNewLabel_14);
+		
+		textField_1 = new JTextField();
+		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
+		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField_1.gridx = 6;
+		gbc_textField_1.gridy = 2;
+		panelMisListas.add(textField_1, gbc_textField_1);
+		textField_1.setColumns(10);
+		
+		btnNewButton = new JButton("Crear");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 7;
+		gbc_btnNewButton.gridy = 2;
+		panelMisListas.add(btnNewButton, gbc_btnNewButton);
+		
+		lblNewLabel_1 = new JLabel("Etiquetas");
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_1.gridx = 5;
+		gbc_lblNewLabel_1.gridy = 4;
+		panelMisListas.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		
+		list_2 = new JList();
+		GridBagConstraints gbc_list_2 = new GridBagConstraints();
+		gbc_list_2.insets = new Insets(0, 0, 5, 5);
+		gbc_list_2.fill = GridBagConstraints.BOTH;
+		gbc_list_2.gridx = 6;
+		gbc_list_2.gridy = 4;
+		panelMisListas.add(list_2, gbc_list_2);
 		
 		panelRecientes = new JPanel();
 		panelPrincipal.add(panelRecientes, "recientes");
@@ -691,50 +745,27 @@ public class Principal extends Thread{
 		panel_4.add(scrollPane_4, gbc_scrollPane_4);
 		
 	}
-	private void eventoBotonBuscarMisListas() {
+	private void mostarVideosLista(String nombre) {
 		
-		botonBuscarMisListas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				List<String> misListas;
-				misListas = Controlador.getUnicaInstancia().buscarMisListas(textAreaBuscarMisListas.getText());
-				String[] data = new String[misListas.size()];
-				for(int i=0; i< misListas.size(); i++) {
-					
-					data[i] = misListas.get(i);
-				}
-				final JList<String> playlists = new JList<String>(data);
-				final JList<String> videosPlaylist = new JList<String>(data);
-				
-				playlists.addMouseListener(new MouseInputAdapter() {
-					
-					public void mouseClicked(MouseEvent me) {
-						
-						if (me.getClickCount() == 1) {
-							JList target = (JList) me.getSource();
-							int index = target.locationToIndex(me.getPoint());
-							if (index >= 0) {
-								Object item = target.getModel().getElementAt(index);
-								String nombrePlaylist = item.toString();
-								
-								List<String> videos = Controlador.getUnicaInstancia().getLista(nombrePlaylist);
-								String[] d = new String[videos.size()];
-								
-								for(int i=0; i< videos.size(); i++) {
-									
-									d[i] = videos.get(i);
-								}
-								
-								videosPlaylist.setListData(d);
-								
-							}
-							panelBuscadas.setViewportView(videosPlaylist);
-						}
-				}});
-				panelBuscadas.setViewportView(playlists);
-				
-			}
-		});
+		List<String> misListas;
+		misListas = Controlador.getUnicaInstancia().getLista(nombre);
+		String[] data = new String[misListas.size()];
+		for(int i=0; i< misListas.size(); i++) {
+			
+			data[i] = misListas.get(i);
+		}
+		JList<String> videosPlaylist = new JList<String>(data);
+		
+	
+		panelBuscadas.setViewportView(videosPlaylist);
+		
+	}
+	private void videosMisListasBlanco() {
+		
+		String[] data = {""};
+		JList<String> videosPlaylist = new JList<String>(data);
+		panelBuscadas.setViewportView(videosPlaylist);
+		
 	}
 
 

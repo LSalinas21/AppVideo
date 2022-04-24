@@ -38,6 +38,9 @@ public class Controlador {
 		lis.add(v4);
 		lis.add(v5);
 		a.creaListaRep("primera", lis);
+		a.creaListaRep("segunada", lis);
+		a.creaListaRep("tercera", lis);
+		a.creaListaRep("cuarta", lis);
 		
 		usuarioActual = a;
 		try {
@@ -106,7 +109,7 @@ public class Controlador {
 		
 		return usuarioActual.getListaVideos(nombre);
 	}
-	public List<PlayList> getMisListas(){
+	public String[] getMisListas(){
 		
 		return usuarioActual.getMisListas();
 	}
