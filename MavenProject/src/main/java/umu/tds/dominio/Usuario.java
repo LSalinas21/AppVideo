@@ -95,14 +95,25 @@ public class Usuario<playListReciente> {
 
 		return misListas;
 	}
-	public List<Video> getPlayList(String nombre) {
+	public ArrayList<String> getPlayList(String nombre) {
 		
+		ArrayList<String> lista = new ArrayList<String>();
 		for(PlayList l: misListas) {
-			
-			if(l.getNombre().equals(nombre))
-				return l.getVideos();
+
+			if(l.getNombre().contains(nombre))
+				lista.add(l.getNombre());
 		}
-		return null;
+		return lista;
+	}
+	public ArrayList<String> getListaVideos(String nombre) {
+		
+		ArrayList<String> lista = new ArrayList<String>();
+		for(PlayList l: misListas) {
+
+			if(l.getNombre().contains(nombre))
+				lista = l.getListaVideos();
+		}
+		return lista;
 	}
 
 	public void creaListaRep(String nombreLista, ArrayList<Video> listaVideos) {

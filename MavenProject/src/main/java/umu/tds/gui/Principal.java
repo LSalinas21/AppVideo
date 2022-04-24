@@ -26,12 +26,15 @@ import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
+
 import java.awt.Insets;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -44,6 +47,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JScrollBar;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
@@ -101,6 +105,7 @@ public class Principal extends Thread{
 	private JScrollBar scrollBarMisListas;
 	private JPanel panelMisListasBuscadas;
 	private JList lista;
+	private JScrollPane panelBuscadas;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -441,10 +446,13 @@ public class Principal extends Thread{
 		scrollBar = new JScrollBar();
 		panel.add(scrollBar);
 		ArrayList<JLabel> labels = new ArrayList<JLabel>();
-		for (int i = 0; i < 50; i++) {
-				JLabel l = new JLabel(String.valueOf(i));
-				panel.add(l, i);	
+		List<Video> lis = new ArrayList<Video>();
+	/*	lis = Controlador.getUnicaInstancia().getLista();
+		for (Video v: lis) {
+				JLabel l = new JLabel(v.getTitulo());
+				panel.add(l);	
 		}
+		*/
 
 		
 		list = new JList();
@@ -469,6 +477,9 @@ public class Principal extends Thread{
 		gbc_list_1.gridx = 5;
 		gbc_list_1.gridy = 5;
 		panelExplorador.add(list_1, gbc_list_1);
+		
+		
+		///Panel mis listas
 		
 		panelMisListas = new JPanel();
 		panelPrincipal.add(panelMisListas, "mislistas");
@@ -512,19 +523,8 @@ public class Principal extends Thread{
 		panelMisListasBuscadas.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		panelMisListasBuscadas.setPreferredSize(new Dimension(50,50));
 		
-		lista = new JList();
-		String[] data = new String[1000];
 		
-		for (int i = 0; i < 1000; i++) {
-			data[i] = new String(String.valueOf(i));
-		}
-		JList<String> a = new JList<String>(data);
-		
-		
-		//lista.setModel(a);
-		
-		JScrollPane panelBuscadas = new JScrollPane(a);
-		panelBuscadas.setPreferredSize(new Dimension(350,285));
+		///Busqueda de las lista
 		
 		
 		GridBagConstraints gbc_panelMisListasBuscadas = new GridBagConstraints();
@@ -533,7 +533,8 @@ public class Principal extends Thread{
 		gbc_panelMisListasBuscadas.gridx = 3;
 		gbc_panelMisListasBuscadas.gridy = 3;
 		
-		
+		panelBuscadas = new JScrollPane();
+		panelBuscadas.setPreferredSize(new Dimension(350,285));
 		panelMisListasBuscadas.add(panelBuscadas);
 		panelMisListas.add(panelMisListasBuscadas, gbc_panelMisListasBuscadas);
 		
@@ -694,21 +695,47 @@ public class Principal extends Thread{
 		
 		botonBuscarMisListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-				List<Video> misListas;
+				
+				List<String> misListas;
 				misListas = Controlador.getUnicaInstancia().buscarMisListas(textAreaBuscarMisListas.getText());
-				mostrarListasBuscadas(misListas);
+				String[] data = new String[misListas.size()];
+				for(int i=0; i< misListas.size(); i++) {
+					
+					data[i] = misListas.get(i);
+				}
+				final JList<String> playlists = new JList<String>(data);
+				final JList<String> videosPlaylist = new JList<String>(data);
+				
+				playlists.addMouseListener(new MouseInputAdapter() {
+					
+					public void mouseClicked(MouseEvent me) {
+						
+						if (me.getClickCount() == 1) {
+							JList target = (JList) me.getSource();
+							int index = target.locationToIndex(me.getPoint());
+							if (index >= 0) {
+								Object item = target.getModel().getElementAt(index);
+								String nombrePlaylist = item.toString();
+								
+								List<String> videos = Controlador.getUnicaInstancia().getLista(nombrePlaylist);
+								String[] d = new String[videos.size()];
+								
+								for(int i=0; i< videos.size(); i++) {
+									
+									d[i] = videos.get(i);
+								}
+								
+								videosPlaylist.setListData(d);
+								
+							}
+							panelBuscadas.setViewportView(videosPlaylist);
+						}
+				}});
+				panelBuscadas.setViewportView(playlists);
+				
 			}
 		});
 	}
-	private void mostrarListasBuscadas(List<Video> lista) {
-		
-		HashMap<JLabel,Video> labels = new HashMap<JLabel,Video>();
-		for (int i = 0; i < lista.size(); i++) {
-				JLabel l = new JLabel(String.valueOf(lista.get(i).getTitulo()));
-				panelMisListasBuscadas.add(l, i);
-				labels.put(l,lista.get(i));
-		}
-	}
+
 
 }

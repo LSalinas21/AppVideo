@@ -11,6 +11,7 @@ import umu.tds.dao.FactoriaDAO;
 import umu.tds.dao.UsuarioDAO;
 import umu.tds.dominio.CatalogoUsuarios;
 import umu.tds.dominio.CatalogoVideos;
+import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
 
@@ -23,13 +24,28 @@ public class Controlador {
 	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
 	
 	private Controlador() {
+		// Pruebas
+		Video v1 = new Video("url1", "titulo1", 1);
+		Video v2 = new Video("url2", "titulo2", 2);
+		Video v3 = new Video("url3", "titulo3", 3);
+		Video v4 = new Video("url4", "titulo4", 4);
+		Video v5 = new Video("url5", "titulo5", 5);
 		Usuario a = new Usuario("aaa","aaa","aaa","aaa","aaa","aaa");
+		ArrayList<Video> lis = new ArrayList<Video>();
+		lis.add(v1);
+		lis.add(v2);
+		lis.add(v3);
+		lis.add(v4);
+		lis.add(v5);
+		a.creaListaRep("primera", lis);
+		
 		usuarioActual = a;
 		try {
 			factoria = FactoriaDAO.getInstancia();
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public static Controlador getUnicaInstancia() {
@@ -81,9 +97,18 @@ public class Controlador {
 		usuarioActual = null;
 		return true;
 	}
-	public List<Video> buscarMisListas(String lista){
+	public List<String> buscarMisListas(String lista){
 		
 		return usuarioActual.getPlayList(lista);
+	}
+	
+	public List<String> getLista(String nombre){
+		
+		return usuarioActual.getListaVideos(nombre);
+	}
+	public List<PlayList> getMisListas(){
+		
+		return usuarioActual.getMisListas();
 	}
 	
 	public void addReciente(Video v) {
