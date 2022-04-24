@@ -53,6 +53,8 @@ import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
@@ -109,8 +111,8 @@ public class Principal<E> extends Thread{
 	private JPanel panelMisListasBuscadas;
 	private JList lista;
 	private JScrollPane panelBuscadas;
-	private JList<? extends E> list_2;
-	private JLabel lblNewLabel_1;
+	private JList<? extends E> etiquetasVideo;
+	private JLabel labelEtiquetasDeVideo;
 	private JTextField textField_1;
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_14;
@@ -577,20 +579,20 @@ public class Principal<E> extends Thread{
 		gbc_btnNewButton.gridy = 2;
 		panelMisListas.add(btnNewButton, gbc_btnNewButton);
 		
-		lblNewLabel_1 = new JLabel("Etiquetas");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 5;
-		gbc_lblNewLabel_1.gridy = 4;
-		panelMisListas.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		labelEtiquetasDeVideo = new JLabel("Etiquetas");
+		GridBagConstraints gbc_labelEtiquetasDeVideo = new GridBagConstraints();
+		gbc_labelEtiquetasDeVideo.insets = new Insets(0, 0, 5, 5);
+		gbc_labelEtiquetasDeVideo.gridx = 5;
+		gbc_labelEtiquetasDeVideo.gridy = 4;
+		panelMisListas.add(labelEtiquetasDeVideo, gbc_labelEtiquetasDeVideo);
 		
-		list_2 = new JList();
-		GridBagConstraints gbc_list_2 = new GridBagConstraints();
-		gbc_list_2.insets = new Insets(0, 0, 5, 5);
-		gbc_list_2.fill = GridBagConstraints.BOTH;
-		gbc_list_2.gridx = 6;
-		gbc_list_2.gridy = 4;
-		panelMisListas.add(list_2, gbc_list_2);
+		etiquetasVideo = new JList();
+		GridBagConstraints gbc_etiquetasVideo = new GridBagConstraints();
+		gbc_etiquetasVideo.insets = new Insets(0, 0, 5, 5);
+		gbc_etiquetasVideo.fill = GridBagConstraints.BOTH;
+		gbc_etiquetasVideo.gridx = 6;
+		gbc_etiquetasVideo.gridy = 4;
+		panelMisListas.add(etiquetasVideo, gbc_etiquetasVideo);
 		
 		panelRecientes = new JPanel();
 		panelPrincipal.add(panelRecientes, "recientes");
@@ -756,6 +758,30 @@ public class Principal<E> extends Thread{
 		}
 		JList<String> videosPlaylist = new JList<String>(data);
 		
+		videosPlaylist.addMouseListener(new MouseInputAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				
+				if (me.getClickCount() == 1) {
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						
+						String[] d = Controlador.getUnicaInstancia().getEtiquetasVideo(nombreVideo);
+						
+						DefaultListModel modelo = new DefaultListModel();
+						for(int i = 0; i < d.length; i++) {
+							
+							modelo.addElement(d[i]);
+						}
+						
+						etiquetasVideo.setModel(modelo);
+						
+					}
+				}
+			}
+		});
 	
 		panelBuscadas.setViewportView(videosPlaylist);
 		

@@ -11,6 +11,7 @@ import umu.tds.dao.FactoriaDAO;
 import umu.tds.dao.UsuarioDAO;
 import umu.tds.dominio.CatalogoUsuarios;
 import umu.tds.dominio.CatalogoVideos;
+import umu.tds.dominio.Etiqueta;
 import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
@@ -22,16 +23,35 @@ public class Controlador {
 	private FactoriaDAO factoria;
 	private static final int SIZE = 5;
 	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
+	private ArrayList<Video> lis;
 	
 	private Controlador() {
 		// Pruebas
+		Etiqueta e1 = new Etiqueta("etiqueta1");
+		Etiqueta e2 = new Etiqueta("etiqueta2");
+		Etiqueta e3 = new Etiqueta("etiqueta3");
+		Etiqueta e4 = new Etiqueta("etiqueta4");
+		Etiqueta e5 = new Etiqueta("etiqueta5");
 		Video v1 = new Video("url1", "titulo1", 1);
 		Video v2 = new Video("url2", "titulo2", 2);
 		Video v3 = new Video("url3", "titulo3", 3);
 		Video v4 = new Video("url4", "titulo4", 4);
 		Video v5 = new Video("url5", "titulo5", 5);
+		v1.agregarEtiqueta(e1);
+		v1.agregarEtiqueta(e2);
+		v2.agregarEtiqueta(e2);
+		v2.agregarEtiqueta(e3);
+		v3.agregarEtiqueta(e3);
+		v3.agregarEtiqueta(e4);
+		v4.agregarEtiqueta(e4);
+		v4.agregarEtiqueta(e5);
+		v5.agregarEtiqueta(e1);
+		v5.agregarEtiqueta(e2);
+		v5.agregarEtiqueta(e3);
+		v5.agregarEtiqueta(e4);
+		v5.agregarEtiqueta(e5);
 		Usuario a = new Usuario("aaa","aaa","aaa","aaa","aaa","aaa");
-		ArrayList<Video> lis = new ArrayList<Video>();
+		lis = new ArrayList<Video>();
 		lis.add(v1);
 		lis.add(v2);
 		lis.add(v3);
@@ -133,6 +153,24 @@ public class Controlador {
 		usuarioActual.setVideosRecientes(listaRecientes);
 		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO();
 		usuarioDAO.update(usuarioActual);
+	}
+	public String[] getEtiquetasVideo(String video) {
+		
+		/* Aqui hay que buscar el video en el catalogo de videos*/
+		ArrayList<Etiqueta> et = new ArrayList<Etiqueta>();
+		for(Video v: lis) {
+			
+			if(v.getTitulo().equals(video)) {
+				et = v.getEtiquetas();
+				break;
+			}
+		}
+		String[] etiquetas = new String[et.size()];
+		for(int i=0; i < et.size(); i++) {
+			
+			etiquetas[i] = et.get(i).getNombre();
+		}
+		return etiquetas;
 	}
 
 }
