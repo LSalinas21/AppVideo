@@ -100,6 +100,8 @@ public class TDSVideoDAO implements VideoDAO{
 				prop.setValor(existente.getTitulo());
 			} else if (prop.getNombre().equals(NUM_REPRO)) {
 				prop.setValor(String.valueOf(existente.getNumRepro()));
+			}else if (prop.getNombre().equals(ETIQUETAS)) {
+				prop.setValor(obtenerCadenaEtiquetas(existente.getEtiquetas()));
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -121,13 +123,19 @@ public class TDSVideoDAO implements VideoDAO{
 				System.out.println(e.getMessage());
 			}
 		}
+		
 		return listaEtiquetas;
 	}
 	private String obtenerCadenaEtiquetas(ArrayList<Etiqueta> etiquetas) {
 		
 		String lineas = "";
+		int contador = etiquetas.size();
 		for (Etiqueta etiqueta : etiquetas) {
-			lineas += etiqueta.getNombre() + ",";
+			contador--;
+			lineas += etiqueta.getNombre();
+			if(contador != 0)
+				lineas += ",";
+			
 		}
 		return lineas.trim();
 	}

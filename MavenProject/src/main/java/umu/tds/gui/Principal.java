@@ -78,7 +78,7 @@ public class Principal<E> extends Thread{
 	private JList list_1;
 	private JScrollPane scrollPane;
 	private JPanel panelDeBusqueda;
-	private JPanel panel;
+	private JPanel panelVideosExplorador;
 	private JLabel lblNewLabel_6;
 	private JLabel lblNewLabel_7;
 	private JLabel lblNewLabel_8;
@@ -374,22 +374,20 @@ public class Principal<E> extends Thread{
 		botonBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				JLabel labels[] = new JLabel[200];
-			    for (int i =  0; i < 200; i++) {
-			       labels[i] = new JLabel("Label" + i);
-			       panelDeBusqueda.add(labels[i]);
+				mostrarVideosDeBusqueda(textField.getText());
 			 }
-			}
+			
 		});
 		
 	}
 	private void configPanelPrincipal() {
 		
+		//panel explorador
 		panelExplorador = new JPanel();
 		panelPrincipal.add(panelExplorador, "explorador");
 		GridBagLayout gbl_panelExplorador = new GridBagLayout();
 		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 27, 0, 0};
-		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 0, 116, 0};
+		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 27, 116, 0};
 		gbl_panelExplorador.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panelExplorador.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelExplorador.setLayout(gbl_panelExplorador);
@@ -435,7 +433,6 @@ public class Principal<E> extends Thread{
 		gbc_lblNewLabel_4.gridy = 1;
 		panelExplorador.add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
-		scrollPane = new JScrollPane();
 
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridwidth = 3;
@@ -445,24 +442,23 @@ public class Principal<E> extends Thread{
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 2;
 		
+		panelVideosExplorador = new JPanel();
+		panelVideosExplorador.setLayout(new FlowLayout());
+		panelVideosExplorador.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		panelVideosExplorador.setPreferredSize(new Dimension(50,50));
 		
-		panelExplorador.add(scrollPane, gbc_scrollPane);
+		GridBagConstraints gbc_panelVideosExplorador = new GridBagConstraints();
+		gbc_panelVideosExplorador.gridwidth = 3;
+		gbc_panelVideosExplorador.gridheight = 4;
+		gbc_panelVideosExplorador.insets = new Insets(0, 0, 5, 5);
+		gbc_panelVideosExplorador.fill = GridBagConstraints.BOTH;
+		gbc_panelVideosExplorador.gridx = 1;
+		gbc_panelVideosExplorador.gridy = 2;
 		
-		panel = new JPanel();
-		scrollPane.setViewportView(panel);
-		panel.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		
-		scrollBar = new JScrollBar();
-		panel.add(scrollBar);
-		ArrayList<JLabel> labels = new ArrayList<JLabel>();
-		List<Video> lis = new ArrayList<Video>();
-	/*	lis = Controlador.getUnicaInstancia().getLista();
-		for (Video v: lis) {
-				JLabel l = new JLabel(v.getTitulo());
-				panel.add(l);	
-		}
-		*/
+		scrollPane = new JScrollPane();
+		scrollPane.setPreferredSize(new Dimension(441, 269));
+		panelVideosExplorador.add(scrollPane);
+		panelExplorador.add(panelVideosExplorador, gbc_panelVideosExplorador);
 
 		
 		list = new JList();
@@ -784,6 +780,45 @@ public class Principal<E> extends Thread{
 		});
 	
 		panelBuscadas.setViewportView(videosPlaylist);
+		
+	}
+private void mostrarVideosDeBusqueda(String nombre) {
+		
+		List<String> videos;
+		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
+		String[] data = new String[videos.size()];
+		for(int i=0; i< videos.size(); i++) {
+			
+			data[i] = videos.get(i);
+		}
+		JList<String> videosBuscados = new JList<String>(data);
+		
+		/*videosBuscados.addMouseListener(new MouseInputAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				
+				if (me.getClickCount() == 1) {
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						
+						String[] d = Controlador.getUnicaInstancia().getEtiquetasVideo(nombreVideo);
+						
+						DefaultListModel modelo = new DefaultListModel();
+						for(int i = 0; i < d.length; i++) {
+							
+							modelo.addElement(d[i]);
+						}
+						
+						etiquetasVideo.setModel(modelo);
+						
+					}
+				}
+			}
+		});*/
+	
+		scrollPane.setViewportView(videosBuscados);
 		
 	}
 	private void videosMisListasBlanco() {

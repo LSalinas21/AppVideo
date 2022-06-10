@@ -1,6 +1,7 @@
 package umu.tds.dominio;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import umu.tds.dao.DAOException;
@@ -10,12 +11,12 @@ public class CatalogoVideos {
 	
 	private static CatalogoVideos unicaInstancia;
 	private FactoriaDAO factoria;
-	private HashMap<String, Video> videosExistentes;
+	private HashMap<Integer, Video> videosExistentes;
 	
 	private CatalogoVideos (){
 		
-		videosExistentes = new HashMap<String, Video>();
-		
+		videosExistentes = new HashMap<Integer, Video>();
+		/*
 		try {
 			factoria = FactoriaDAO.getInstancia();
 			
@@ -27,7 +28,7 @@ public class CatalogoVideos {
 			}
 		} catch (DAOException eDAO) {
 			   eDAO.printStackTrace();
-		}
+		}*/
 		
 	}
 	
@@ -39,5 +40,14 @@ public class CatalogoVideos {
 		
 		return unicaInstancia;
 	}
+	public List<Video> getAllVideoss() {
+		
+		return new LinkedList<Video>(videosExistentes.values());
+	}
+	public void addVideo(Video video) {
+		
+		videosExistentes.put(video.getId(), video);
+	}
+	
 
 }

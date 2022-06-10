@@ -9,6 +9,7 @@ import java.util.Queue;
 import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
 import umu.tds.dao.UsuarioDAO;
+import umu.tds.dao.VideoDAO;
 import umu.tds.dominio.CatalogoUsuarios;
 import umu.tds.dominio.CatalogoVideos;
 import umu.tds.dominio.Etiqueta;
@@ -24,6 +25,7 @@ public class Controlador {
 	private static final int SIZE = 5;
 	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
 	private ArrayList<Video> lis;
+	private CatalogoVideos catalogoDeVideos;
 	
 	private Controlador() {
 		// Pruebas
@@ -33,8 +35,11 @@ public class Controlador {
 		Etiqueta e4 = new Etiqueta("etiqueta4");
 		Etiqueta e5 = new Etiqueta("etiqueta5");
 		Video v1 = new Video("url1", "titulo1", 1);
+		v1.setId(1);
 		Video v2 = new Video("url2", "titulo2", 2);
+		v2.setId(2);
 		Video v3 = new Video("url3", "titulo3", 3);
+		v3.setId(3);
 		Video v4 = new Video("url4", "titulo4", 4);
 		Video v5 = new Video("url5", "titulo5", 5);
 		v1.agregarEtiqueta(e1);
@@ -61,6 +66,13 @@ public class Controlador {
 		a.creaListaRep("segunada", lis);
 		a.creaListaRep("tercera", lis);
 		a.creaListaRep("cuarta", lis);
+		//Fin pruebas
+		
+		catalogoDeVideos = CatalogoVideos.getUnicaInstancia();
+		
+		catalogoDeVideos.addVideo(v1);
+		catalogoDeVideos.addVideo(v2);
+		catalogoDeVideos.addVideo(v3);
 		
 		usuarioActual = a;
 		try {
@@ -68,6 +80,9 @@ public class Controlador {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
+
+		VideoDAO videoDAO = factoria.getVideoDAO();
+		videoDAO.create(v1);
 		
 	}
 	
@@ -171,6 +186,16 @@ public class Controlador {
 			etiquetas[i] = et.get(i).getNombre();
 		}
 		return etiquetas;
+	}
+	public List<String> buscarVideos(String busqueda){
+		
+		ArrayList<String> lista = new ArrayList<String>();
+		for(Video v : catalogoDeVideos.getAllVideoss()) {
+	
+			if(v.getTitulo().contains(busqueda))
+				lista.add(v.getTitulo());
+		}
+		return lista;
 	}
 
 }
