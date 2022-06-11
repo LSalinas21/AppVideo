@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
@@ -16,6 +17,7 @@ import umu.tds.dominio.Etiqueta;
 import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
+import umu.tds.gui.VideoApp;
 
 public class Controlador {
 	
@@ -26,6 +28,7 @@ public class Controlador {
 	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
 	private ArrayList<Video> lis;
 	private CatalogoVideos catalogoDeVideos;
+	private VideoApp reproductor;
 	
 	private Controlador() {
 		// Pruebas
@@ -34,7 +37,7 @@ public class Controlador {
 		Etiqueta e3 = new Etiqueta("etiqueta3");
 		Etiqueta e4 = new Etiqueta("etiqueta4");
 		Etiqueta e5 = new Etiqueta("etiqueta5");
-		Video v1 = new Video("url1", "titulo1", 1);
+		Video v1 = new Video("https://www.youtube.com/watch?v=6LvvXIU8IE4", "Sia - Unstoppable (Official Video - Live from the Nostalgic For The Present Tour)", 1);
 		v1.setId(1);
 		Video v2 = new Video("url2", "titulo2", 2);
 		v2.setId(2);
@@ -68,11 +71,14 @@ public class Controlador {
 		a.creaListaRep("cuarta", lis);
 		//Fin pruebas
 		
+		reproductor = new VideoApp();
 		catalogoDeVideos = CatalogoVideos.getUnicaInstancia();
 		
 		catalogoDeVideos.addVideo(v1);
 		catalogoDeVideos.addVideo(v2);
 		catalogoDeVideos.addVideo(v3);
+		catalogoDeVideos.addVideo(v4);
+		catalogoDeVideos.addVideo(v5);
 		
 		usuarioActual = a;
 		try {
@@ -93,6 +99,10 @@ public class Controlador {
 	}
 	public Usuario getUsuarioActual() {
 		return usuarioActual;
+	}
+	public void reproducir(String titulo, String url) {
+		
+		reproductor.reproducir(titulo, url);
 	}
 	public boolean esUsuarioRegistrado(String login) {
 		return CatalogoUsuarios.getUnicaInstancia().getUsuario(login) != null;
@@ -196,6 +206,23 @@ public class Controlador {
 				lista.add(v.getTitulo());
 		}
 		return lista;
+	}
+	public Video getVideo(String titulo) {
+		
+		return catalogoDeVideos.getUnicaInstancia().buscarVideo(titulo);
+	}
+	public List<String> getEtiquetas(){
+		
+		List<String> lista = catalogoDeVideos.getAllVideoss().stream()
+				.map(video -> video.getEtiquetas())
+				.flatMap(et -> et.stream())
+				.map(e -> e.getNombre())
+				.distinct()
+				.collect(Collectors.toList());
+		
+		
+		return lista;
+		
 	}
 
 }

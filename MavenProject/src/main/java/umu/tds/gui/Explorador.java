@@ -1,6 +1,7 @@
 package umu.tds.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -8,8 +9,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -17,18 +21,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.MouseInputAdapter;
 
 import umu.tds.controlador.Controlador;
+import umu.tds.dominio.Video;
 
 public class Explorador {
 	
-	private JPanel panel,panelVideosExplorador;
-	private JScrollPane scrollPaneVideos;
+	private JPanel panel,panelVideosExplorador,panelEtiquetasDis,panelEtiquetasSelec;
+	private JScrollPane scrollPaneVideos,scrollPaneEtiquetasDis,scrollPaneEtiquetasSelec;
 	private JLabel labelBuscarTitulo,labelEtiquetasDisponibles,labelEtiquetasSeleccionadas;
 	private JTextField textoBuscarTitulo;
 	private JButton botonBuscar;
 	private JButton botonNuevaBusqueda;
 	private JList listaEtiquetasDisponibles,listEtiquetasSeleccionadas;
+	private List<String> selec;
+	private DefaultListModel modeloDis;
+	private JList allEti;
 	
 	
 	public Explorador() {
@@ -44,6 +53,11 @@ public class Explorador {
 		agregaBuscarTitulo();
 		agregaEtiquetasDeBusqueda();
 		agregaPanelVideos();
+		
+		agregaPanelEtiquetasDis();
+		agregaPanelEtiqeutasSelec();
+		llenarEtiquetasDisponibles();
+		
 	}
 	public JPanel getInstancia() {
 		
@@ -83,6 +97,8 @@ public class Explorador {
 		gbc_btnNewButton_1.gridx = 2;
 		gbc_btnNewButton_1.gridy = 1;
 		panel.add(botonNuevaBusqueda, gbc_btnNewButton_1);
+		
+		eventoBotonNuevaBusqueda();
 	}
 	private void agregaEtiquetasDeBusqueda() {
 		
@@ -93,15 +109,6 @@ public class Explorador {
 		gbc_lblNewLabel_4.gridy = 1;
 		panel.add(labelEtiquetasDisponibles, gbc_lblNewLabel_4);
 		
-		listaEtiquetasDisponibles = new JList();
-		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.gridheight = 2;
-		gbc_list.insets = new Insets(0, 0, 5, 0);
-		gbc_list.fill = GridBagConstraints.BOTH;
-		gbc_list.gridx = 5;
-		gbc_list.gridy = 2;
-		panel.add(listaEtiquetasDisponibles, gbc_list);
-		
 		labelEtiquetasSeleccionadas = new JLabel("Buscar etiquetas");
 		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
 		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 0);
@@ -109,12 +116,7 @@ public class Explorador {
 		gbc_lblNewLabel_5.gridy = 4;
 		panel.add(labelEtiquetasSeleccionadas, gbc_lblNewLabel_5);
 		
-		listEtiquetasSeleccionadas = new JList();
-		GridBagConstraints gbc_list_1 = new GridBagConstraints();
-		gbc_list_1.fill = GridBagConstraints.BOTH;
-		gbc_list_1.gridx = 5;
-		gbc_list_1.gridy = 5;
-		panel.add(listEtiquetasSeleccionadas, gbc_list_1);
+		
 	}
 	private void agregaPanelVideos() {
 		
@@ -138,12 +140,65 @@ public class Explorador {
 		
 		
 	}
+	private void agregaPanelEtiquetasDis() {
+		
+		panelEtiquetasDis = new JPanel();
+		panelEtiquetasDis.setLayout(new FlowLayout());
+		panelEtiquetasDis.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		panelEtiquetasDis.setPreferredSize(new Dimension(50,50));
+		
+		GridBagConstraints gbc_EtiquetasDis = new GridBagConstraints();
+		gbc_EtiquetasDis.gridheight = 2;
+		gbc_EtiquetasDis.insets = new Insets(0, 0, 5, 0);
+		gbc_EtiquetasDis.fill = GridBagConstraints.BOTH;
+		gbc_EtiquetasDis.gridx = 5;
+		gbc_EtiquetasDis.gridy = 2;
+		
+		scrollPaneEtiquetasDis = new JScrollPane();
+		scrollPaneEtiquetasDis.setPreferredSize(new Dimension(110, 125));
+		panelEtiquetasDis.add(scrollPaneEtiquetasDis);
+		panel.add(panelEtiquetasDis, gbc_EtiquetasDis);
+	}
+	private void agregaPanelEtiqeutasSelec() {
+		
+		panelEtiquetasSelec = new JPanel();
+		GridBagConstraints gbc_EtiquetasSele = new GridBagConstraints();
+		gbc_EtiquetasSele.fill = GridBagConstraints.BOTH;
+		gbc_EtiquetasSele.gridx = 5;
+		gbc_EtiquetasSele.gridy = 5;
+		
+		scrollPaneEtiquetasSelec = new JScrollPane();
+		scrollPaneEtiquetasSelec.setPreferredSize(new Dimension(110, 125));
+		panelEtiquetasSelec.add(scrollPaneEtiquetasSelec);
+		panel.add(panelEtiquetasSelec, gbc_EtiquetasSele);
+		
+		panel.add(panelEtiquetasSelec, gbc_EtiquetasSele);
+
+		//scrollPaneEtiquetasSelec.setViewportView(listEtiquetasSeleccionadas);
+		
+		
+	}
 	private void eventoBotonBuscar() {
 		
 		botonBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				mostrarVideosDeBusqueda(textoBuscarTitulo.getText());
+			 }
+			
+		});
+		
+		
+		
+	}
+	private void eventoBotonNuevaBusqueda() {
+		
+		botonNuevaBusqueda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JList<String> videosBuscados = new JList<String>();
+				scrollPaneVideos.setViewportView(videosBuscados);
+				textoBuscarTitulo.setText("");
 			 }
 			
 		});
@@ -160,32 +215,94 @@ public class Explorador {
 		}
 		JList<String> videosBuscados = new JList<String>(data);
 		
-		/*videosBuscados.addMouseListener(new MouseInputAdapter() {
+		videosBuscados.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
-				if (me.getClickCount() == 1) {
+				if (me.getClickCount() == 2) {
 					JList target = (JList) me.getSource();
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
 						String nombreVideo = item.toString();
 						
-						String[] d = Controlador.getUnicaInstancia().getEtiquetasVideo(nombreVideo);
-						
-						DefaultListModel modelo = new DefaultListModel();
-						for(int i = 0; i < d.length; i++) {
-							
-							modelo.addElement(d[i]);
-						}
-						
-						etiquetasVideo.setModel(modelo);
+						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
 						
 					}
 				}
 			}
-		});*/
+		});
 	
 		scrollPaneVideos.setViewportView(videosBuscados);
+		
+	}
+	private void llenarEtiquetasDisponibles() {
+		
+		selec = new ArrayList<String>();
+		
+		modeloDis = new DefaultListModel();
+		
+		allEti = new JList();
+		allEti.setModel(modeloDis);
+		
+		for(String eti: Controlador.getUnicaInstancia().getEtiquetas())
+			modeloDis.addElement(eti);
+		
+		allEti.addMouseListener(new MouseInputAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				
+				if (me.getClickCount() == 1) {
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						
+						Object item = target.getModel().getElementAt(index);
+						String nombreEtiqueta = item.toString();
+						
+						if(!selec.contains(nombreEtiqueta)) {
+							
+							selec.add(nombreEtiqueta);
+						
+							agregarEtiquetasSeleccionadas();
+							
+						}
+						
+					}
+				}
+			}
+
+		});
+		scrollPaneEtiquetasDis.setViewportView(allEti);
+		
+	}
+	private void agregarEtiquetasSeleccionadas() {
+		
+		DefaultListModel modelo = new DefaultListModel();
+		JList lista = new JList();
+		lista.setModel(modelo);
+		
+		for(String et: selec)
+			modelo.addElement(et);
+		
+		lista.addMouseListener(new MouseInputAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				
+				if (me.getClickCount() == 1) {
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					
+					if (index >= 0) {
+						
+						Object item = target.getModel().getElementAt(index);
+						modelo.removeElement(item);
+						selec.remove(item.toString());
+						
+					}
+				}
+			}
+
+		});
+		scrollPaneEtiquetasSelec.setViewportView(lista);
 		
 	}
 

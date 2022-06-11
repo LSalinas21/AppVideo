@@ -21,24 +21,29 @@ import tds.video.VideoWeb;
 
 public class VideoApp extends JFrame {
 	private JPanel contentPane;
-	private static VideoWeb videoWeb;
+	private static VideoWeb videoWeb = new VideoWeb();
+	private  JLabel titulo;
+	private  JLabel miniatura;
+	private  String url;
 
 	public VideoApp() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setDefaultCloseOperation(0);
 		setBounds(0, 0, 760, 650);
+		
 
 		contentPane = (JPanel) getContentPane();
 		contentPane.setSize(new Dimension(760, 630)); //20 de barra de t�tulo
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
-		final JLabel titulo = new JLabel("Sin titulo",JLabel.CENTER);
+		titulo = new JLabel("Sin titulo",JLabel.CENTER);
 		titulo.setMinimumSize(new Dimension(760, 60));
 		titulo.setPreferredSize(new Dimension(760, 60));
 		titulo.setMaximumSize(new Dimension(760, 60));
 		Font ftit= new Font ("Arial",Font.BOLD,24);
 		titulo.setFont(ftit);
-		//titulo.setAlignmentX(0.5f); //centrar
+		titulo.setAlignmentX(0.5f); //centrar
 		titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JPanel botones = new JPanel ();
 		botones.setMinimumSize(new Dimension(760, 60));
@@ -46,22 +51,16 @@ public class VideoApp extends JFrame {
 		botones.setMaximumSize(new Dimension(760, 60));
 		botones.setLayout(new FlowLayout());
 
-		JButton btUno = new JButton("Musica");
-		JButton btDos = new JButton("Pelicula");
-		JButton btTres = new JButton("Sorpresa");
-		JButton btCancelar = new JButton("Cancelar");
+		JButton btCancelar = new JButton("Cerrar");
 		btCancelar.setBackground(Color.RED);
 		btCancelar.setForeground(Color.WHITE);
 
-		botones.add(btUno);
-		botones.add(btDos);
-		botones.add(btTres);
 		botones.add(Box.createHorizontalStrut(50));
 		botones.add(btCancelar);
 
 		JLabel reprod=new JLabel("reproduciendo:");
 		reprod.setAlignmentX(0.5f);
-		final JLabel miniatura= new JLabel();
+		miniatura= new JLabel();
 		miniatura.setAlignmentX(0.5f);
 
 		JLabel copyright=new JLabel(videoWeb.getVersion());
@@ -73,53 +72,37 @@ public class VideoApp extends JFrame {
 		contentPane.add(miniatura);
 		contentPane.add(copyright);
 
-		btUno.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				titulo.setText("Rasputin");
-				miniatura.setIcon(videoWeb.getThumb("https://www.youtube.com/watch?v=rk7ITikbhs4"));
-				videoWeb.playVideo("https://www.youtube.com/watch?v=hnRphfqIvsM");
-				validate();
-			}
-
-		});
-		btDos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				titulo.setText("Jacinto Durante Representante");
-				miniatura.setIcon(videoWeb.getThumb("https://www.youtube.com/watch?v=EdVMSYomYJY"));
-				videoWeb.playVideo("https://www.youtube.com/watch?v=EdVMSYomYJY");
-				validate();
-			}
-
-		});
-		btTres.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				titulo.setText("Si tu padre sabe de efectos especiales");
-				miniatura.setIcon(videoWeb.getThumb("https://www.youtube.com/watch?v=0243Z0YXPpY"));
-				videoWeb.playVideo("https://www.youtube.com/watch?v=0243Z0YXPpY");
-				validate();
-			}
-
-		});
 		btCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				titulo.setText("Sin t�tulo");
+				titulo.setText("Sin titulo");
 				miniatura.setIcon(null);
 				videoWeb.cancel();
+				dispose();
 			}
 		});
+		
 	}
-	public static void main(String[] args) {
+	public void reproducir(String tituloV, String url) {
+		
+		titulo.setText(tituloV);
+		miniatura.setIcon(videoWeb.getThumb(url));
+		videoWeb.playVideo(url);
+		this.url = url;
+		setVisible(true);
+		
+		
+	}
+	/*public void iniciar(final String titu, final String url) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					videoWeb = new VideoWeb();
-					VideoApp frame = new VideoApp();
+					VideoApp frame = new VideoApp(titu, url);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}
+	}*/
 }

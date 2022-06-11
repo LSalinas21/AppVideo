@@ -48,6 +48,16 @@ public class CatalogoVideos {
 		
 		videosExistentes.put(video.getId(), video);
 	}
+	public Video buscarVideo(String titulo) {
+		
+		for(Video v : videosExistentes.values()) {
+			
+			if(v.getTitulo().equals(titulo))
+				return v;
+			
+		}
+		return null;
+	}
 	
 
 }
