@@ -44,6 +44,7 @@ public class Explorador {
 		
 		videosBuscados = new JList();
 		panel = new JPanel();
+		
 		GridBagLayout gbl_panelExplorador = new GridBagLayout();
 		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 27, 0, 0};
 		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 27, 116, 0};
@@ -122,9 +123,6 @@ public class Explorador {
 	private void agregaPanelVideos() {
 		
 		panelVideosExplorador = new JPanel();
-		panelVideosExplorador.setLayout(new FlowLayout());
-		panelVideosExplorador.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panelVideosExplorador.setPreferredSize(new Dimension(50,50));
 		
 		GridBagConstraints gbc_panelVideosExplorador = new GridBagConstraints();
 		gbc_panelVideosExplorador.gridwidth = 3;
@@ -144,9 +142,6 @@ public class Explorador {
 	private void agregaPanelEtiquetasDis() {
 		
 		panelEtiquetasDis = new JPanel();
-		panelEtiquetasDis.setLayout(new FlowLayout());
-		panelEtiquetasDis.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panelEtiquetasDis.setPreferredSize(new Dimension(50,50));
 		
 		GridBagConstraints gbc_EtiquetasDis = new GridBagConstraints();
 		gbc_EtiquetasDis.gridheight = 2;
@@ -188,8 +183,6 @@ public class Explorador {
 			 }
 			
 		});
-		
-		
 		
 	}
 	private void eventoBotonNuevaBusqueda() {
@@ -327,4 +320,9 @@ public class Explorador {
 		
 	}
 
+	public void actualizar() {
+		
+		llenarEtiquetasDisponibles();
+		
+	}
 }

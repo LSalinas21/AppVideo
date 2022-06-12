@@ -24,7 +24,6 @@ public class VideoApp extends JFrame {
 	private static VideoWeb videoWeb = new VideoWeb();
 	private  JLabel titulo;
 	private  JLabel miniatura;
-	private  String url;
 
 	public VideoApp() {
 		
@@ -33,7 +32,7 @@ public class VideoApp extends JFrame {
 		
 
 		contentPane = (JPanel) getContentPane();
-		contentPane.setSize(new Dimension(760, 630)); //20 de barra de t�tulo
+		contentPane.setSize(new Dimension(730, 630)); //20 de barra de t�tulo
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
@@ -87,22 +86,9 @@ public class VideoApp extends JFrame {
 		titulo.setText(tituloV);
 		miniatura.setIcon(videoWeb.getThumb(url));
 		videoWeb.playVideo(url);
-		this.url = url;
 		setVisible(true);
 		
 		
 	}
-	/*public void iniciar(final String titu, final String url) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					videoWeb = new VideoWeb();
-					VideoApp frame = new VideoApp(titu, url);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
+
 }

@@ -179,6 +179,7 @@ public class Principal<E> extends Thread{
 		public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout)(panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "explorador");
+				panelExplorador.actualizar();
 			}
 		});
 		panelSeccion.add(botonExplorador);

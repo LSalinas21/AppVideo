@@ -58,6 +58,19 @@ public class CatalogoVideos {
 		}
 		return null;
 	}
+	public Etiqueta setNuevaEtiqueta(String video, String nomEtiqueta) {
+		
+		for(Video v : videosExistentes.values())
+			if(v.getTitulo().equals(video)) {
+				Etiqueta nueva = new Etiqueta(nomEtiqueta);
+				v.agregarEtiqueta(nueva);
+				videosExistentes.replace(v.getId(), v);
+				return nueva;
+			}
+		return null;
+				
+		
+	}
 	
 
 }

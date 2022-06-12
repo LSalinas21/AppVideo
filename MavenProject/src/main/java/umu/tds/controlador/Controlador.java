@@ -44,7 +44,9 @@ public class Controlador {
 		Video v3 = new Video("url3", "titulo3", 3);
 		v3.setId(3);
 		Video v4 = new Video("url4", "titulo4", 4);
+		v4.setId(4);
 		Video v5 = new Video("url5", "titulo5", 5);
+		v5.setId(5);
 		v1.agregarEtiqueta(e1);
 		v1.agregarEtiqueta(e2);
 		v2.agregarEtiqueta(e2);
@@ -88,7 +90,7 @@ public class Controlador {
 		}
 
 		VideoDAO videoDAO = factoria.getVideoDAO();
-		videoDAO.create(v1);
+		//videoDAO.create(v1);
 		
 	}
 	
@@ -239,6 +241,11 @@ public class Controlador {
 
 				return lista;
 			
+	}
+	public Etiqueta agregarEtiqueta(String video,String nomEtiqueta) {
+		
+		
+		return catalogoDeVideos.getUnicaInstancia().setNuevaEtiqueta(video, nomEtiqueta);
 	}
 
 }

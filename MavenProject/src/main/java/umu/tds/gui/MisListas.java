@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -24,6 +26,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.MouseInputAdapter;
 
 import umu.tds.controlador.Controlador;
+import umu.tds.dominio.Etiqueta;
+import umu.tds.dominio.Video;
 
 public class MisListas {
 	
@@ -34,9 +38,13 @@ public class MisListas {
 	private JTextField textFieldNuevaEtiqueta;
 	private JButton botonCrear;
 	private JList etiquetasVideo;
+	private DefaultListModel modeloVideosLista, modeloEtiqeutasVideoSele;
+	private String videoSeleccionado;
 	
 	public MisListas() {
 		
+		modeloVideosLista = new DefaultListModel();
+		modeloEtiqeutasVideoSele = new DefaultListModel();
 		panel = new JPanel();
 		GridBagLayout gbl_panelMisListas = new GridBagLayout();
 		gbl_panelMisListas.columnWidths = new int[]{10, 50, 79, 0, 0, 50, 20, 0, 0, 0};
@@ -126,9 +134,6 @@ public class MisListas {
 	private void agregaPanelMisListasBuscadas() {
 		
 		panelMisListasBuscadas = new JPanel();
-		panelMisListasBuscadas.setLayout(new FlowLayout());
-		panelMisListasBuscadas.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panelMisListasBuscadas.setPreferredSize(new Dimension(50,50));
 		
 		GridBagConstraints gbc_panelMisListasBuscadas = new GridBagConstraints();
 		gbc_panelMisListasBuscadas.gridwidth = 2;
@@ -151,39 +156,54 @@ public class MisListas {
 		gbc_btnNewButton.gridx = 7;
 		gbc_btnNewButton.gridy = 2;
 		panel.add(botonCrear, gbc_btnNewButton);
+		
+		agregaEventoBotonCrear();
 	}
 	
 	private void mostrarVideosLista(String nombre) {
 		
 		List<String> misListas;
 		misListas = Controlador.getUnicaInstancia().getLista(nombre);
-		String[] data = new String[misListas.size()];
-		for(int i=0; i< misListas.size(); i++) {
-			
-			data[i] = misListas.get(i);
-		}
-		JList<String> videosPlaylist = new JList<String>(data);
+		JList videosPlaylist = new JList();
+		videosPlaylist.setModel(modeloVideosLista);
+		for(String titu: misListas)
+			modeloVideosLista.addElement(titu);
+		
 		
 		videosPlaylist.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
 				if (me.getClickCount() == 1) {
+					
+					modeloEtiqeutasVideoSele.removeAllElements();
+					
 					JList target = (JList) me.getSource();
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
 						String nombreVideo = item.toString();
 						
+						videoSeleccionado = nombreVideo;
 						String[] d = Controlador.getUnicaInstancia().getEtiquetasVideo(nombreVideo);
 						
-						DefaultListModel modelo = new DefaultListModel();
 						for(int i = 0; i < d.length; i++) {
 							
-							modelo.addElement(d[i]);
+							modeloEtiqeutasVideoSele.addElement(d[i]);
 						}
 						
-						etiquetasVideo.setModel(modelo);
+						etiquetasVideo.setModel(modeloEtiqeutasVideoSele);
+					}
+				}else if (me.getClickCount() == 2) {
+					
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						videoSeleccionado = nombreVideo;
 						
+						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
 					}
 				}
 			}
@@ -197,6 +217,19 @@ public class MisListas {
 		String[] data = {""};
 		JList<String> videosPlaylist = new JList<String>(data);
 		panelBuscadas.setViewportView(videosPlaylist);
+		
+	}
+	
+	private void agregaEventoBotonCrear() {
+		
+		botonCrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Etiqueta etiquetaCreada = Controlador.getUnicaInstancia().agregarEtiqueta(videoSeleccionado, textFieldNuevaEtiqueta.getText());
+				modeloEtiqeutasVideoSele.addElement(etiquetaCreada.getNombre());
+			 }
+			
+		});
 		
 	}
 
