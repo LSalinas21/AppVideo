@@ -36,12 +36,13 @@ public class Explorador {
 	private JButton botonNuevaBusqueda;
 	private JList listaEtiquetasDisponibles,listEtiquetasSeleccionadas;
 	private List<String> selec;
-	private DefaultListModel modeloDis;
-	private JList allEti;
+	private DefaultListModel modeloDis,modeloVideos;
+	private JList allEti,videosBuscados;
 	
 	
 	public Explorador() {
 		
+		videosBuscados = new JList();
 		panel = new JPanel();
 		GridBagLayout gbl_panelExplorador = new GridBagLayout();
 		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 27, 0, 0};
@@ -207,13 +208,17 @@ public class Explorador {
 	private void mostrarVideosDeBusqueda(String nombre) {
 		
 		List<String> videos;
+		
+		modeloVideos = new DefaultListModel();
+		
 		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
-		String[] data = new String[videos.size()];
-		for(int i=0; i< videos.size(); i++) {
+	
+		for(String nVi: videos) {
 			
-			data[i] = videos.get(i);
+			modeloVideos.addElement(nVi);
 		}
-		JList<String> videosBuscados = new JList<String>(data);
+		
+		videosBuscados.setModel(modeloVideos);
 		
 		videosBuscados.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
@@ -236,6 +241,20 @@ public class Explorador {
 		scrollPaneVideos.setViewportView(videosBuscados);
 		
 	}
+	private void mostrarVideosDeBusquedaPorEtiqueta() {
+		
+		DefaultListModel modeloVideosPorEti = new DefaultListModel();
+		
+		List<String> videosEti = Controlador.getUnicaInstancia().buscarVideosPorEtiquetas(selec);
+		
+		videosBuscados.setModel(modeloVideosPorEti);
+		for(String titu: videosEti)
+			modeloVideosPorEti.addElement(titu);
+		
+		scrollPaneVideos.setViewportView(videosBuscados);
+		
+	}
+
 	private void llenarEtiquetasDisponibles() {
 		
 		selec = new ArrayList<String>();
@@ -264,6 +283,7 @@ public class Explorador {
 							selec.add(nombreEtiqueta);
 						
 							agregarEtiquetasSeleccionadas();
+							mostrarVideosDeBusquedaPorEtiqueta();
 							
 						}
 						
@@ -296,6 +316,7 @@ public class Explorador {
 						Object item = target.getModel().getElementAt(index);
 						modelo.removeElement(item);
 						selec.remove(item.toString());
+						mostrarVideosDeBusquedaPorEtiqueta();
 						
 					}
 				}

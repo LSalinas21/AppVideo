@@ -224,5 +224,21 @@ public class Controlador {
 		return lista;
 		
 	}
+	public List<String> buscarVideosPorEtiquetas(List<String> seleccionadas){
+		
+		List<String> lista = new ArrayList<String>();
+		
+				catalogoDeVideos.getAllVideoss().stream()
+				.forEach(vi -> {
+							for(String etiS : seleccionadas)
+								for(Etiqueta eti: vi.getEtiquetas())
+									if(eti.getNombre().equals(etiS) && !lista.contains(vi.getTitulo()))
+										lista.add(vi.getTitulo());
+										
+						});
+
+				return lista;
+			
+	}
 
 }
