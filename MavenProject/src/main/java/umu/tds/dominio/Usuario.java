@@ -118,7 +118,7 @@ public class Usuario<playListReciente> {
 		ArrayList<String> lista = new ArrayList<String>();
 		for(PlayList l: misListas) {
 
-			if(l.getNombre().contains(nombre))
+			if(l.getNombre().equals(nombre))
 				lista = l.getListaVideos();
 		}
 		return lista;

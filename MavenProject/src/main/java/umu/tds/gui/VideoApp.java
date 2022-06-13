@@ -28,7 +28,7 @@ public class VideoApp extends JFrame {
 	public VideoApp() {
 		
 		setDefaultCloseOperation(0);
-		setBounds(0, 0, 760, 650);
+		setBounds(0, 0, 410, 500);
 		
 
 		contentPane = (JPanel) getContentPane();

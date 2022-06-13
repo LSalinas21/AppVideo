@@ -7,13 +7,22 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.event.MouseInputAdapter;
+
+import umu.tds.controlador.Controlador;
+import umu.tds.dominio.Video;
 
 public class NuevaLista {
 	
@@ -23,9 +32,19 @@ public class NuevaLista {
 	private JTextField textFieldNombre,textFieldBuscarTitulo;
 	private JButton botonBuscarLista,botonBorrarLista,botonAñadir,botonAceptar,botonQuitar,botonNuevaBusqueda,botonBuscarVideo;
 	private JScrollPane panelListaVideos,panelVideosBuscados;
+	private DefaultListModel modeloVideos,modeloListaVideos;
+	private JList videosBuscados,videosPlaylist;
+	private String videoSeleccionado, videoSeleccionadoQuitar, listaActual;
+	private List <String> misListas;
 
 	
 	public NuevaLista() {
+		
+		videosBuscados = new JList();
+		modeloVideos = new DefaultListModel();
+		
+		videosPlaylist = new JList();
+		modeloListaVideos = new DefaultListModel();
 		
 		panel = new JPanel();
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
@@ -38,6 +57,10 @@ public class NuevaLista {
 		agregaBotones();
 		agregaPanelListaDeVideos();
 		agregaPanelVideosBuscados();
+		agregaEventoAñadir();
+		agregaEventoQuitar();
+		agregaEventoAceptar();
+		agregaEventoBorrar();
 		
 
 	}
@@ -83,6 +106,7 @@ public class NuevaLista {
 		
 		textFieldNombre = new JTextField();
 		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
+		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_2.gridx = 1;
 		gbc_textField_2.gridy = 2;
@@ -108,6 +132,8 @@ public class NuevaLista {
 		gbc_btnNewButton_2.gridy = 2;
 		panelIzquierdo.add(botonBuscarLista, gbc_btnNewButton_2);
 		
+		agregaEventoBusquedaDeLista();
+		
 		botonBorrarLista = new JButton("Borrar");
 		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
 		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
@@ -115,16 +141,16 @@ public class NuevaLista {
 		gbc_btnNewButton_5.gridy = 3;
 		panelIzquierdo.add(botonBorrarLista, gbc_btnNewButton_5);
 		
+		botonBorrarLista.setEnabled(false);
+		
 		botonAñadir = new JButton("Añadir");
-		botonAñadir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
 		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_3.gridx = 1;
 		gbc_btnNewButton_3.gridy = 9;
 		panelIzquierdo.add(botonAñadir, gbc_btnNewButton_3);
+		
+		botonAñadir.setEnabled(false);
 		
 		botonQuitar = new JButton("Quitar");
 		GridBagConstraints gbc_btnQuitar = new GridBagConstraints();
@@ -133,6 +159,8 @@ public class NuevaLista {
 		gbc_btnQuitar.gridy = 9;
 		panelIzquierdo.add(botonQuitar, gbc_btnQuitar);
 		
+		botonQuitar.setEnabled(false);
+		
 		botonAceptar = new JButton("Aceptar");
 		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
 		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 5);
@@ -140,16 +168,16 @@ public class NuevaLista {
 		gbc_btnNewButton_4.gridy = 10;
 		panelIzquierdo.add(botonAceptar, gbc_btnNewButton_4);
 		
+		botonAceptar.setEnabled(false);
+		
 		botonNuevaBusqueda = new JButton("Nueva Busqueda");
-		botonNuevaBusqueda.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		GridBagConstraints gbc_btnNewButton_7 = new GridBagConstraints();
 		gbc_btnNewButton_7.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewButton_7.gridx = 1;
 		gbc_btnNewButton_7.gridy = 2;
 		panelDerecho.add(botonNuevaBusqueda, gbc_btnNewButton_7);
+		
+		agregaEventoNuevaBusqueda();
 		
 		botonBuscarVideo = new JButton("Buscar");
 		GridBagConstraints gbc_btnNewButton_6 = new GridBagConstraints();
@@ -158,6 +186,8 @@ public class NuevaLista {
 		gbc_btnNewButton_6.gridx = 4;
 		gbc_btnNewButton_6.gridy = 2;
 		panelDerecho.add(botonBuscarVideo, gbc_btnNewButton_6);
+		
+		agregaEventoBuscarVideo();
 	}
 	private void agregaPanelListaDeVideos() {
 		
@@ -193,6 +223,212 @@ public class NuevaLista {
 		gbl_panel_4.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_4.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panelDerecho.setLayout(gbl_panel_4);
+	}
+	private void agregaEventoBuscarVideo() {
+		
+		botonBuscarVideo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				mostrarVideosDeBusqueda(textFieldBuscarTitulo.getText());
+			 }
+			
+		});
+	}
+	private void agregaEventoAceptar() {
+		
+		botonAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JOptionPane.showConfirmDialog(null, "¿Desea crear una nueva lista?", "¿Desea crear una nueva lista?", JOptionPane.YES_NO_OPTION);
+			 }
+			
+		});
+		
+	}
+	private void agregaEventoBorrar() {
+		
+		botonBorrarLista.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JOptionPane.showConfirmDialog(null, "¿Desea borrar la lista " + listaActual +"?",
+									"¿Desea borrar la lista " + listaActual +"?", JOptionPane.YES_NO_OPTION);
+			 }
+			
+		});
+		
+	}
+	private void agregaEventoAñadir() {
+		
+		botonAñadir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(!misListas.contains(videoSeleccionado)) {
+					
+					modeloListaVideos.addElement(videoSeleccionado);
+					misListas.add(videoSeleccionado);
+				}
+			}
+		});
+		panelListaVideos.setViewportView(videosPlaylist);
+		
+	}
+	private void agregaEventoQuitar() {
+		
+		botonQuitar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(videoSeleccionadoQuitar != null) {
+					
+					modeloListaVideos.removeElement(videoSeleccionadoQuitar);
+					misListas.remove(videoSeleccionadoQuitar);
+					videoSeleccionadoQuitar = "";
+				}
+			}
+		});
+		panelListaVideos.setViewportView(videosPlaylist);
+		
+	}
+	private void mostrarVideosDeBusqueda(String nombre) {
+		
+		modeloVideos.removeAllElements();
+		List<String> videos;
+		
+		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
+	
+		for(String nVi: videos) {
+			
+			modeloVideos.addElement(nVi);
+		}
+		
+		videosBuscados.setModel(modeloVideos);
+
+		videosBuscados.addMouseListener(new MouseInputAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				
+				if (me.getClickCount() == 2) {
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						
+						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+						
+					}
+				}else if(me.getClickCount() == 1) {
+					
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						videoSeleccionado = nombreVideo;
+						
+					}
+					
+				}
+				
+			}
+		});
+	
+		panelVideosBuscados.setViewportView(videosBuscados);
+		
+	}
+	private void eventoBotonNuevaBusqueda() {
+		
+		botonNuevaBusqueda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JList<String> videosBuscados = new JList<String>();
+				panelVideosBuscados.setViewportView(videosBuscados);
+				textFieldBuscarTitulo.setText("");
+			 }
+			
+		});
+		
+	}
+	private void agregaEventoNuevaBusqueda() {
+		
+		botonNuevaBusqueda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				eventoBotonNuevaBusqueda();
+			}
+		});
+	}
+	private void agregaEventoBusquedaDeLista() {
+		
+		botonBuscarLista.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String nombreLista = textFieldNombre.getText();
+				if(!nombreLista.equals("")) {
+					
+					botonBorrarLista.setEnabled(true);
+					botonQuitar.setEnabled(true);
+					botonAñadir.setEnabled(true);
+					busquedaDeListas(nombreLista);
+					
+					
+				}
+					
+			
+			}
+		});
+		
+	}
+	private void busquedaDeListas(String nombre) {
+		
+		listaActual = nombre;
+		modeloListaVideos.removeAllElements();
+		misListas = Controlador.getUnicaInstancia().getLista(nombre);
+		
+		videosPlaylist.setModel(modeloListaVideos);
+		
+		if(misListas.size() != 0) {
+			
+			for(String titu: misListas)
+				modeloListaVideos.addElement(titu);
+		}else {
+			
+			botonAceptar.setEnabled(true);
+			botonBorrarLista.setEnabled(false);
+		}
+			
+		
+		
+		videosPlaylist.addMouseListener(new MouseInputAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				
+				if (me.getClickCount() == 2) {
+					
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						
+						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+					}
+				}else if (me.getClickCount() == 1) {
+					
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+
+						videoSeleccionadoQuitar = item.toString();
+						
+						
+					}
+				}
+			}
+		});
+
+		panelListaVideos.setViewportView(videosPlaylist);
 	}
 
 }

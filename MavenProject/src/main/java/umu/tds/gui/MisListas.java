@@ -34,7 +34,7 @@ public class MisListas {
 	private JPanel panel,panelMisListasBuscadas;
 	private JLabel buscarPlaylist,labelNuevaEtiqueta,labelEtiquetasDeVideo;
 	private JComboBox textAreaBuscarMisListas;
-	private JScrollPane panelBuscadas;
+	private JScrollPane panelBuscadas,panelEtiquetas;
 	private JTextField textFieldNuevaEtiqueta;
 	private JButton botonCrear;
 	private JList etiquetasVideo;
@@ -97,6 +97,7 @@ public class MisListas {
 					
 					if(e.getItem().toString() != "---Selecciona---") {
 						
+						modeloVideosLista.removeAllElements();
 						mostrarVideosLista(e.getItem().toString());
 					}else {
 						
@@ -123,13 +124,19 @@ public class MisListas {
 		panel.add(textFieldNuevaEtiqueta, gbc_textField_1);
 		textFieldNuevaEtiqueta.setColumns(10);
 		
+		panelEtiquetas = new JScrollPane();
+		panelEtiquetas.setPreferredSize(new Dimension(100,100));
+		
 		etiquetasVideo = new JList();
+		
 		GridBagConstraints gbc_etiquetasVideo = new GridBagConstraints();
 		gbc_etiquetasVideo.insets = new Insets(0, 0, 5, 5);
 		gbc_etiquetasVideo.fill = GridBagConstraints.BOTH;
 		gbc_etiquetasVideo.gridx = 6;
 		gbc_etiquetasVideo.gridy = 4;
-		panel.add(etiquetasVideo, gbc_etiquetasVideo);
+		
+		panelEtiquetas.add(etiquetasVideo);
+		panel.add(panelEtiquetas, gbc_etiquetasVideo);
 	}
 	private void agregaPanelMisListasBuscadas() {
 		
@@ -208,7 +215,7 @@ public class MisListas {
 				}
 			}
 		});
-	
+		panelEtiquetas.setViewportView(etiquetasVideo);
 		panelBuscadas.setViewportView(videosPlaylist);
 		
 	}
@@ -225,12 +232,17 @@ public class MisListas {
 		botonCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				Etiqueta etiquetaCreada = Controlador.getUnicaInstancia().agregarEtiqueta(videoSeleccionado, textFieldNuevaEtiqueta.getText());
-				modeloEtiqeutasVideoSele.addElement(etiquetaCreada.getNombre());
+				String texto = textFieldNuevaEtiqueta.getText();
+				
+				if(!texto.equals("")) {
+					
+					Etiqueta etiquetaCreada = Controlador.getUnicaInstancia().agregarEtiqueta(videoSeleccionado, texto);
+					modeloEtiqeutasVideoSele.addElement(etiquetaCreada.getNombre());
+				}
 			 }
 			
 		});
-		
+		panelEtiquetas.setViewportView(etiquetasVideo);
 	}
 
 }

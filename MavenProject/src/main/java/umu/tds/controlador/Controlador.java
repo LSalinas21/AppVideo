@@ -67,10 +67,15 @@ public class Controlador {
 		lis.add(v3);
 		lis.add(v4);
 		lis.add(v5);
+		ArrayList<Video> lis2 = new ArrayList<Video>();
+		lis2.add(v1);
+		lis2.add(v2);
+		lis2.add(v3);
+
 		a.creaListaRep("primera", lis);
-		a.creaListaRep("segunada", lis);
+		a.creaListaRep("segunada", lis2);
 		a.creaListaRep("tercera", lis);
-		a.creaListaRep("cuarta", lis);
+		a.creaListaRep("cuarta", lis2);
 		//Fin pruebas
 		
 		reproductor = new VideoApp();

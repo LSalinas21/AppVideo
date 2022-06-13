@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -34,7 +35,7 @@ public class Explorador {
 	private JTextField textoBuscarTitulo;
 	private JButton botonBuscar;
 	private JButton botonNuevaBusqueda;
-	private JList listaEtiquetasDisponibles,listEtiquetasSeleccionadas;
+	//private JList listaEtiquetasDisponibles,listEtiquetasSeleccionadas;
 	private List<String> selec;
 	private DefaultListModel modeloDis,modeloVideos;
 	private JList allEti,videosBuscados;
@@ -212,7 +213,7 @@ public class Explorador {
 		}
 		
 		videosBuscados.setModel(modeloVideos);
-		
+
 		videosBuscados.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
