@@ -202,11 +202,19 @@ public class Explorador {
 	private void mostrarVideosDeBusqueda(String nombre) {
 		
 		List<String> videos;
+		List<String> videosEti;
 		
 		modeloVideos = new DefaultListModel();
 		
 		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
-	
+		
+		if(selec.size() > 0) {
+			
+			videosEti = Controlador.getUnicaInstancia().buscarVideosPorEtiquetas(selec);
+			videos.retainAll(videosEti);
+			
+		}
+		
 		for(String nVi: videos) {
 			
 			modeloVideos.addElement(nVi);
@@ -235,20 +243,6 @@ public class Explorador {
 		scrollPaneVideos.setViewportView(videosBuscados);
 		
 	}
-	private void mostrarVideosDeBusquedaPorEtiqueta() {
-		
-		DefaultListModel modeloVideosPorEti = new DefaultListModel();
-		
-		List<String> videosEti = Controlador.getUnicaInstancia().buscarVideosPorEtiquetas(selec);
-		
-		videosBuscados.setModel(modeloVideosPorEti);
-		for(String titu: videosEti)
-			modeloVideosPorEti.addElement(titu);
-		
-		scrollPaneVideos.setViewportView(videosBuscados);
-		
-	}
-
 	private void llenarEtiquetasDisponibles() {
 		
 		selec = new ArrayList<String>();
@@ -277,7 +271,6 @@ public class Explorador {
 							selec.add(nombreEtiqueta);
 						
 							agregarEtiquetasSeleccionadas();
-							mostrarVideosDeBusquedaPorEtiqueta();
 							
 						}
 						
@@ -310,7 +303,6 @@ public class Explorador {
 						Object item = target.getModel().getElementAt(index);
 						modelo.removeElement(item);
 						selec.remove(item.toString());
-						mostrarVideosDeBusquedaPorEtiqueta();
 						
 					}
 				}
