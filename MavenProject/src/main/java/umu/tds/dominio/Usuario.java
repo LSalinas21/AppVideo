@@ -113,6 +113,10 @@ public class Usuario<playListReciente> {
 		}
 		return lista;
 	}
+	public List<PlayList> getPlayList() {
+		
+		return misListas;
+	}
 	public List<String> getListaVideos(String nombre) {
 		
 		List<String> lista = new ArrayList<String>();

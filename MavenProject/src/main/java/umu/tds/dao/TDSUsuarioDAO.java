@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import umu.tds.dominio.Etiqueta;
+import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Usuario;
+import umu.tds.dominio.Video;
 
 public final class TDSUsuarioDAO implements UsuarioDAO {
 
@@ -54,7 +58,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private Entidad usuarioToEntidad(Usuario usuario) {
 		Entidad eUsuario = new Entidad();
 		eUsuario.setNombre(USUARIO);
-
+		
+		playListToString(usuario.getPlayList());
+		
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(NICK, usuario.getNick()), new Propiedad(PASSWORD, usuario.getPassword()),
@@ -69,6 +75,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		return null;
 	}
 */
+	
 	public void create(Usuario usuario) {
 		Entidad eUsuario = this.usuarioToEntidad(usuario);
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
@@ -105,7 +112,70 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 			servPersistencia.modificarPropiedad(prop);
 		}
 	}
+	public String playListToString(List<PlayList> listas) {
+		
+		String linea = "";
+		
+		for(PlayList pl: listas) {
+			
+			linea += pl.getNombre() + " ";
+			
+			for(Video v: pl.getVideos()) {
+				
+				linea += v.getId() + " ";
+			}
+			
+			linea = linea.trim();
+			linea += "$";
+		}
+		//System.out.println(linea);
+		return linea;
+		
+	}
+	public List<PlayList> stringToPlayList(String linea) {
+		
+		List<PlayList> lista = new ArrayList<PlayList>();
+		
+		String[] pls = linea.split("\\$");
+		
+		
+		for (String cad: pls) {
+			
+			String[] vids = cad.split(" ");
+			
+			List<Video> videos = new ArrayList<Video>();
+			String nombre = "";
+			
+			for (String cad2: vids) {
+				
+				if(nombre.equals("")) {
+					
+					nombre = cad2;
+				}else {
+					
+					try {
+						
+						TDSVideoDAO eVideo = new TDSVideoDAO();
+						Video video = eVideo.get(Integer.parseInt(cad2));
+						videos.add(video);
+						
+					}catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+					
+				}
+				
+			}
+			PlayList playList = new PlayList(nombre, videos);
 
+			lista.add(playList);
+			
+		}
+		
+		
+		return lista;
+		
+	}
 	public Usuario get(int id) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(id);
 

@@ -93,7 +93,8 @@ public class Controlador {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
-
+		String linea = factoria.getUsuarioDAO().playListToString(usuarioActual.getPlayList());
+		factoria.getUsuarioDAO().stringToPlayList(linea);
 		VideoDAO videoDAO = factoria.getVideoDAO();
 		//videoDAO.create(v1);
 		
