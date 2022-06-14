@@ -113,25 +113,55 @@ public class Usuario<playListReciente> {
 		}
 		return lista;
 	}
-	public ArrayList<String> getListaVideos(String nombre) {
+	public List<String> getListaVideos(String nombre) {
 		
-		ArrayList<String> lista = new ArrayList<String>();
+		List<String> lista = new ArrayList<String>();
 		for(PlayList l: misListas) {
 
-			if(l.getNombre().equals(nombre))
+			if(l.getNombre().equals(nombre)) {
+				
 				lista = l.getListaVideos();
+			}
 		}
 		return lista;
 	}
 
-	public void creaListaRep(String nombreLista, ArrayList<Video> listaVideos) {
+	public void creaListaRep(String nombreLista, List<Video> listaVideos) {
 		
-		PlayList lista = new PlayList(nombreLista, listaVideos);
-		misListas.add(lista);
+		boolean nueva = true;
+		
+		for(PlayList pl: misListas) {
+			
+			if(pl.getNombre().equals(nombreLista)) {
+				
+				misListas.remove(pl);
+				pl.setVideos(listaVideos);
+				misListas.add(pl);
+				nueva = false;
+				break;
+			}
+		}
+		if(nueva) {
+			
+			PlayList lista = new PlayList(nombreLista, listaVideos);
+			misListas.add(lista);
+		}
+			
 	}
 
 	public void setVideosRecientes(List listaRecientes) {
 		this.recientes = listaRecientes;
+	}
+	public void borrarPlayList(String nombre) {
+		
+		for(PlayList pl: misListas) {
+			
+			if(pl.getNombre().equals(nombre)) {
+				
+				misListas.remove(pl);
+				break;
+			}
+		}
 	}
 
 }

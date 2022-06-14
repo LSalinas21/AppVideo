@@ -62,6 +62,11 @@ public class MisListas {
 		
 		return panel;
 	}
+	public void actualizar() {
+		
+		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(Controlador.getUnicaInstancia().getMisListas()));
+		
+	}
 	private void agregaEtiquetas() {
 		
 		buscarPlaylist = new JLabel("Seleccionar playlist : ");

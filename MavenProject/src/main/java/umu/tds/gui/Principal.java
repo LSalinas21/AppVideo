@@ -186,6 +186,7 @@ public class Principal<E> extends Thread{
 		botonMisListas.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout)(panelPrincipal.getLayout());
+				panelMisListas.actualizar();
 				cl.show(panelPrincipal, "mislistas");
 			}
 		});

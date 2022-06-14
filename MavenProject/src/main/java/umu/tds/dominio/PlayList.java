@@ -52,9 +52,9 @@ public class PlayList {
 	{
 		return videos.size();
 	}
-	public ArrayList<String> getListaVideos(){
+	public List<String> getListaVideos(){
 		
-		ArrayList<String> lista = new ArrayList<String>();
+		List<String> lista = new ArrayList<String>();
 		for(Video v: videos) {
 			
 			lista.add(v.getTitulo());

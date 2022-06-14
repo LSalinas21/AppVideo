@@ -23,6 +23,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String PASSWORD = "password";
 	private static final String FECHA_NACIMIENTO = "fechaNacimiento";
 	private static final String RECIENTE = "videosRecientes";
+	private static final String PLAYLISTS = "playlist";
 
 	private ServicioPersistencia servPersistencia;
 	private SimpleDateFormat dateFormat;
@@ -40,7 +41,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, NICK);
 		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, PASSWORD);
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
-		String videosRecientes = servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTE);
+		//List<Video> videosRecientes = servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTE);
+		//List<Playlist> misListas = servPersistencia.recuperarEntidades(eUsuario, PLAYLISTS);
+		
 
 		Usuario usuario = new Usuario(nombre, apellidos, email, login, password, fechaNacimiento);
 		usuario.setId(eUsuario.getId());

@@ -152,6 +152,7 @@ public class Controlador {
 		usuarioActual = null;
 		return true;
 	}
+	///revisar
 	public List<String> buscarMisListas(String lista){
 		
 		return usuarioActual.getPlayList(lista);
@@ -165,6 +166,9 @@ public class Controlador {
 		
 		return usuarioActual.getMisListas();
 	}
+	
+	////fin revisar
+	
 	
 	public void addReciente(Video v) {
 		List listaRecientes = new LinkedList<Video>(recientes);
@@ -249,8 +253,16 @@ public class Controlador {
 	}
 	public Etiqueta agregarEtiqueta(String video,String nomEtiqueta) {
 		
-		
 		return catalogoDeVideos.getUnicaInstancia().setNuevaEtiqueta(video, nomEtiqueta);
 	}
-
+	
+	public void crearPlayList(String nombreLista, List<String> videos) {
+		
+		List<Video> listaVideos = catalogoDeVideos.getUnicaInstancia().getListaDeVideos(videos);
+		usuarioActual.creaListaRep(nombreLista, listaVideos);
+	}
+	public void borrarPlayList(String nombreLista) {
+		
+		usuarioActual.borrarPlayList(nombreLista);
+	}
 }

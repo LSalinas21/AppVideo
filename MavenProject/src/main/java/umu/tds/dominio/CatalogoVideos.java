@@ -71,6 +71,22 @@ public class CatalogoVideos {
 				
 		
 	}
+	public List<Video> getListaDeVideos(List<String> videos){
+		
+		List<Video> lista = new LinkedList<Video>();
+		
+		for(String titu: videos) {
+			
+			for(Video v : videosExistentes.values()) {
+				
+				if(v.getTitulo().equals(titu)) {
+					lista.add(v);
+					break;
+				}
+			}
+		}
+		return lista;
+	}
 	
 
 }

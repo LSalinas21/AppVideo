@@ -239,8 +239,13 @@ public class NuevaLista {
 		botonAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				JOptionPane.showConfirmDialog(null, "¿Desea crear una nueva lista?", "¿Desea crear una nueva lista?", JOptionPane.YES_NO_OPTION);
-			 }
+				int resp = JOptionPane.showConfirmDialog(null, "¿Desea guardar esta lista?", "¿Desea guardar esta lista?", JOptionPane.YES_NO_OPTION);
+				if(resp == JOptionPane.YES_OPTION) {
+					
+					Controlador.getUnicaInstancia().crearPlayList(listaActual, misListas);
+					botonAceptar.setEnabled(false);
+				}
+			}
 			
 		});
 		
@@ -250,8 +255,20 @@ public class NuevaLista {
 		botonBorrarLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				JOptionPane.showConfirmDialog(null, "¿Desea borrar la lista " + listaActual +"?",
+				int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la lista " + listaActual +"?",
 									"¿Desea borrar la lista " + listaActual +"?", JOptionPane.YES_NO_OPTION);
+				
+				if(resp == JOptionPane.YES_OPTION) {
+					
+					textFieldNombre.setText("");
+					modeloListaVideos.removeAllElements();
+					botonAñadir.setEnabled(false);
+					botonBorrarLista.setEnabled(false);
+					botonQuitar.setEnabled(false);
+					botonAceptar.setEnabled(false);
+					Controlador.getUnicaInstancia().borrarPlayList(listaActual);
+	
+				}
 			 }
 			
 		});
@@ -266,6 +283,7 @@ public class NuevaLista {
 					
 					modeloListaVideos.addElement(videoSeleccionado);
 					misListas.add(videoSeleccionado);
+					botonAceptar.setEnabled(true);
 				}
 			}
 		});
@@ -364,11 +382,13 @@ public class NuevaLista {
 			public void actionPerformed(ActionEvent e) {
 				
 				String nombreLista = textFieldNombre.getText();
+
 				if(!nombreLista.equals("")) {
 					
 					botonBorrarLista.setEnabled(true);
 					botonQuitar.setEnabled(true);
 					botonAñadir.setEnabled(true);
+					botonAceptar.setEnabled(false);
 					busquedaDeListas(nombreLista);
 					
 					
