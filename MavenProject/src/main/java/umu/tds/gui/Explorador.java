@@ -35,7 +35,6 @@ public class Explorador {
 	private JTextField textoBuscarTitulo;
 	private JButton botonBuscar;
 	private JButton botonNuevaBusqueda;
-	//private JList listaEtiquetasDisponibles,listEtiquetasSeleccionadas;
 	private List<String> selec;
 	private DefaultListModel modeloDis,modeloVideos;
 	private JList allEti,videosBuscados;

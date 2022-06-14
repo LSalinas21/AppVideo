@@ -53,8 +53,6 @@ public class VideoApp extends JFrame {
 		JButton btCancelar = new JButton("Cerrar");
 		btCancelar.setBackground(Color.RED);
 		btCancelar.setForeground(Color.WHITE);
-
-		botones.add(Box.createHorizontalStrut(50));
 		botones.add(btCancelar);
 
 		JLabel reprod=new JLabel("reproduciendo:");
