@@ -71,6 +71,7 @@ public class Principal<E> extends Thread{
 	private MisListas panelMisListas;
 	private Recientes panelRecientes;
 	private NuevaLista panelNuevaLista;
+	private boolean band = false;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -84,8 +85,19 @@ public class Principal<E> extends Thread{
 				if(Controlador.getUnicaInstancia().getUsuarioActual() != null) {
 					
 					habilitaAccionesUsuario();
+					if(band == false) {
+						
+						configPanelPrincipal();
+						band = true;
+						
+					}
+					if(!panelPrincipal.isVisible()) {
+						
+						panelPrincipal.setVisible(true);
+					}
 					//frame.revalidate();
 				}else {
+
 					deshabilitaAccionesUsuario();
 					//frame.revalidate();
 				}
@@ -312,6 +324,7 @@ public class Principal<E> extends Thread{
 					if (loginOut) {
 						
 						deshabilitaAccionesUsuario();
+						panelPrincipal.setVisible(false);
 					} 
 				}
 				
@@ -323,7 +336,7 @@ public class Principal<E> extends Thread{
 		frame.getContentPane().add(panelPrincipal, BorderLayout.CENTER);
 		panelPrincipal.setLayout(new CardLayout(0, 0));
 		
-		configPanelPrincipal();
+		//aqui
 		
 	}
 

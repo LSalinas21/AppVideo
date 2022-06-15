@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -87,6 +88,10 @@ public class VideoApp extends JFrame {
 		setVisible(true);
 		
 		
+	}
+	public ImageIcon getIcono(String url) {
+		
+		return videoWeb.getThumb(url);
 	}
 
 }

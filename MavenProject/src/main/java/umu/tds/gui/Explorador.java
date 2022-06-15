@@ -38,6 +38,7 @@ public class Explorador {
 	private List<String> selec;
 	private DefaultListModel modeloDis,modeloVideos;
 	private JList allEti,videosBuscados;
+	private JLabel iconoVideo;
 	
 	
 	public Explorador() {
@@ -68,12 +69,12 @@ public class Explorador {
 	private void agregaBuscarTitulo() {
 		
 		labelBuscarTitulo = new JLabel("Buscar titulo: ");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 0;
-		panel.add(labelBuscarTitulo, gbc_lblNewLabel);
+		GridBagConstraints gbc_iconoVideo = new GridBagConstraints();
+		gbc_iconoVideo.insets = new Insets(0, 0, 5, 5);
+		gbc_iconoVideo.anchor = GridBagConstraints.EAST;
+		gbc_iconoVideo.gridx = 1;
+		gbc_iconoVideo.gridy = 0;
+		panel.add(labelBuscarTitulo, gbc_iconoVideo);
 		
 		textoBuscarTitulo = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
@@ -92,6 +93,13 @@ public class Explorador {
 		gbc_botonBuscar.gridx = 3;
 		gbc_botonBuscar.gridy = 0;
 		panel.add(botonBuscar, gbc_botonBuscar);
+		
+		iconoVideo = new JLabel("");
+		GridBagConstraints gbc_iconoVideo1 = new GridBagConstraints();
+		gbc_iconoVideo1.insets = new Insets(0, 0, 5, 0);
+		gbc_iconoVideo1.gridx = 5;
+		gbc_iconoVideo1.gridy = 0;
+		panel.add(iconoVideo, gbc_iconoVideo1);
 		
 		botonNuevaBusqueda = new JButton("Nueva Busqueda");
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
@@ -127,7 +135,7 @@ public class Explorador {
 		GridBagConstraints gbc_panelVideosExplorador = new GridBagConstraints();
 		gbc_panelVideosExplorador.gridwidth = 3;
 		gbc_panelVideosExplorador.gridheight = 4;
-		gbc_panelVideosExplorador.insets = new Insets(0, 0, 5, 5);
+		gbc_panelVideosExplorador.insets = new Insets(0, 0, 0, 5);
 		gbc_panelVideosExplorador.fill = GridBagConstraints.BOTH;
 		gbc_panelVideosExplorador.gridx = 1;
 		gbc_panelVideosExplorador.gridy = 2;
@@ -233,6 +241,18 @@ public class Explorador {
 						
 						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+						
+					}
+				}else if(me.getClickCount() == 1) {
+					
+					JList target = (JList) me.getSource();
+					int index = target.locationToIndex(me.getPoint());
+					if (index >= 0) {
+						Object item = target.getModel().getElementAt(index);
+						String nombreVideo = item.toString();
+						
+						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						iconoVideo.setIcon(Controlador.getUnicaInstancia().getIcono(vid.getUrl()));
 						
 					}
 				}

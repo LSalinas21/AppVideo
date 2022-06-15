@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+import javax.swing.ImageIcon;
+
 import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
 import umu.tds.dao.UsuarioDAO;
@@ -31,75 +33,24 @@ public class Controlador {
 	private VideoApp reproductor;
 	
 	private Controlador() {
-		// Pruebas
-		Etiqueta e1 = new Etiqueta("etiqueta1");
-		Etiqueta e2 = new Etiqueta("etiqueta2");
-		Etiqueta e3 = new Etiqueta("etiqueta3");
-		Etiqueta e4 = new Etiqueta("etiqueta4");
-		Etiqueta e5 = new Etiqueta("etiqueta5");
-		Video v1 = new Video("https://www.youtube.com/watch?v=6LvvXIU8IE4", "Sia - Unstoppable (Official Video - Live from the Nostalgic For The Present Tour)", 1);
-		v1.setId(1);
-		Video v2 = new Video("url2", "titulo2", 2);
-		v2.setId(2);
-		Video v3 = new Video("url3", "titulo3", 3);
-		v3.setId(3);
-		Video v4 = new Video("url4", "titulo4", 4);
-		v4.setId(4);
-		Video v5 = new Video("url5", "titulo5", 5);
-		v5.setId(5);
-		v1.agregarEtiqueta(e1);
-		v1.agregarEtiqueta(e2);
-		v2.agregarEtiqueta(e2);
-		v2.agregarEtiqueta(e3);
-		v3.agregarEtiqueta(e3);
-		v3.agregarEtiqueta(e4);
-		v4.agregarEtiqueta(e4);
-		v4.agregarEtiqueta(e5);
-		v5.agregarEtiqueta(e1);
-		v5.agregarEtiqueta(e2);
-		v5.agregarEtiqueta(e3);
-		v5.agregarEtiqueta(e4);
-		v5.agregarEtiqueta(e5);
-		Usuario a = new Usuario("aaa","aaa","aaa","aaa","aaa","aaa");
-		lis = new ArrayList<Video>();
-		lis.add(v1);
-		lis.add(v2);
-		lis.add(v3);
-		lis.add(v4);
-		lis.add(v5);
-		ArrayList<Video> lis2 = new ArrayList<Video>();
-		lis2.add(v1);
-		lis2.add(v2);
-		lis2.add(v3);
-
-		a.creaListaRep("primera", lis);
-		a.creaListaRep("segunada", lis2);
-		a.creaListaRep("tercera", lis);
-		a.creaListaRep("cuarta", lis2);
-		//Fin pruebas
-		
+	
 		reproductor = new VideoApp();
 		catalogoDeVideos = CatalogoVideos.getUnicaInstancia();
+		Video v1 = new Video("https://www.youtube.com/watch?v=Tda5u5JNRko","Hermes | Destripando la Historia",0);
 		
-		catalogoDeVideos.addVideo(v1);
-		catalogoDeVideos.addVideo(v2);
-		catalogoDeVideos.addVideo(v3);
-		catalogoDeVideos.addVideo(v4);
-		catalogoDeVideos.addVideo(v5);
-		
-		usuarioActual = a;
+		CatalogoVideos.getUnicaInstancia().addVideo(v1);
+
 		try {
 			factoria = FactoriaDAO.getInstancia();
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
-		String linea = factoria.getUsuarioDAO().playListToString(usuarioActual.getPlayList());
-		factoria.getUsuarioDAO().stringToPlayList(linea);
-		VideoDAO videoDAO = factoria.getVideoDAO();
-		//videoDAO.create(v1);
 		
 	}
-	
+	public ImageIcon getIcono(String url) {
+		
+		return reproductor.getIcono(url);
+	}
 	public static Controlador getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new Controlador();

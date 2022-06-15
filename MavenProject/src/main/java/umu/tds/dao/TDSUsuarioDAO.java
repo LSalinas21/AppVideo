@@ -156,8 +156,8 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 					try {
 						
 						TDSVideoDAO eVideo = new TDSVideoDAO();
-						Video video = eVideo.get(Integer.parseInt(cad2));
-						videos.add(video);
+						//Video video = eVideo.get(Integer.parseInt(cad2));
+						//videos.add(video);
 						
 					}catch (Exception e) {
 						System.out.println(e.getMessage());
