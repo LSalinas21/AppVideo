@@ -65,6 +65,9 @@ public class MisListas {
 	public void actualizar() {
 		
 		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(Controlador.getUnicaInstancia().getMisListas()));
+		textFieldNuevaEtiqueta.setText("");
+		modeloVideosLista.removeAllElements();
+		modeloEtiqeutasVideoSele.removeAllElements();
 		
 	}
 	private void agregaEtiquetas() {

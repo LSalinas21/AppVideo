@@ -65,7 +65,7 @@ public class Registro {
 	private int frameLargo = 340;
 	private Border bordeDefault;
 	
-	private Pattern pat = Pattern.compile("[a-zA-Z]*@[a-zA-Z]*\\.[a-zA-Z]*");
+	private Pattern pat = Pattern.compile("[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z0-9]*");
 	/**
 	 * Create the frame.
 	 */

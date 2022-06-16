@@ -2,6 +2,7 @@ package umu.tds.controlador;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -9,6 +10,10 @@ import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
+import umu.tds.componente.CargadorVideos;
+import umu.tds.componente.Videos;
+import umu.tds.componente.VideosEvent;
+import umu.tds.componente.VideosListener;
 import umu.tds.dao.DAOException;
 import umu.tds.dao.FactoriaDAO;
 import umu.tds.dao.UsuarioDAO;
@@ -21,24 +26,19 @@ import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
 import umu.tds.gui.VideoApp;
 
-public class Controlador {
+public class Controlador implements VideosListener {
 	
 	private Usuario usuarioActual;
 	private static Controlador unicaInstancia;
 	private FactoriaDAO factoria;
 	private static final int SIZE = 5;
-	Queue<Video> recientes = new ArrayDeque<Video>(SIZE);
-	private ArrayList<Video> lis;
 	private CatalogoVideos catalogoDeVideos;
 	private VideoApp reproductor;
+
 	
 	private Controlador() {
 	
 		reproductor = new VideoApp();
-		catalogoDeVideos = CatalogoVideos.getUnicaInstancia();
-		Video v1 = new Video("https://www.youtube.com/watch?v=Tda5u5JNRko","Hermes | Destripando la Historia",0);
-		
-		CatalogoVideos.getUnicaInstancia().addVideo(v1);
 
 		try {
 			factoria = FactoriaDAO.getInstancia();
@@ -46,17 +46,21 @@ public class Controlador {
 			e.printStackTrace();
 		}
 		
+		CargadorVideos.getUnicaInstancia().addVideosListener(this);
+		
 	}
 	public ImageIcon getIcono(String url) {
 		
 		return reproductor.getIcono(url);
 	}
 	public static Controlador getUnicaInstancia() {
+		
 		if (unicaInstancia == null)
 			unicaInstancia = new Controlador();
 		return unicaInstancia;
 	}
 	public Usuario getUsuarioActual() {
+		
 		return usuarioActual;
 	}
 	public void reproducir(String titulo, String url) {
@@ -64,6 +68,7 @@ public class Controlador {
 		reproductor.reproducir(titulo, url);
 	}
 	public boolean esUsuarioRegistrado(String login) {
+		
 		return CatalogoUsuarios.getUnicaInstancia().getUsuario(login) != null;
 	}
 	public boolean registrarUsuario(String nombre, String apellidos, String email, String login, String password,
@@ -81,6 +86,7 @@ public class Controlador {
 		return true;
 	}
 	public boolean loginUsuario(String nombre, String password) {
+		
 		Usuario usuario = CatalogoUsuarios.getUnicaInstancia().getUsuario(nombre);
 		if (usuario != null && usuario.getPassword().equals(password)) {
 			this.usuarioActual = usuario;
@@ -90,10 +96,11 @@ public class Controlador {
 	}
 	
 	public boolean borrarUsuario(Usuario usuario) {
+		
 		if (!esUsuarioRegistrado(usuario.getNick()))
 			return false;
 
-		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); /* Adaptador DAO para borrar el Usuario de la BD */
+		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO(); 
 		usuarioDAO.delete(usuario);
 
 		CatalogoUsuarios.getUnicaInstancia().removeUsuario(usuario);
@@ -123,30 +130,16 @@ public class Controlador {
 	
 	
 	public void addReciente(Video v) {
-		List listaRecientes = new LinkedList<Video>(recientes);
-		listaRecientes = usuarioActual.getVideosRecientes();
 		
-		if (listaRecientes.contains(v)) {
-			listaRecientes.remove(v);
-			listaRecientes.add(0, v);
-		}else {
-			if (listaRecientes.size()<5) {
-				listaRecientes.add(0,v);
-			}else {
-				listaRecientes.remove(SIZE-1);
-				listaRecientes.add(0, v);
-			}
-		}
-		
-		usuarioActual.setVideosRecientes(listaRecientes);
+		usuarioActual.setVideosReciente(v);
 		UsuarioDAO usuarioDAO = factoria.getUsuarioDAO();
 		usuarioDAO.update(usuarioActual);
 	}
 	public String[] getEtiquetasVideo(String video) {
 		
-		/* Aqui hay que buscar el video en el catalogo de videos*/
-		ArrayList<Etiqueta> et = new ArrayList<Etiqueta>();
-		for(Video v: lis) {
+		/* Hacer con java 8*/
+		List<Etiqueta> et = new ArrayList<Etiqueta>();
+		for(Video v: CatalogoVideos.getUnicaInstancia().getAllVideoss()) {
 			
 			if(v.getTitulo().equals(video)) {
 				et = v.getEtiquetas();
@@ -160,23 +153,24 @@ public class Controlador {
 		}
 		return etiquetas;
 	}
-	public List<String> buscarVideos(String busqueda){
+	public List<Video> buscarVideos(String busqueda){
 		
-		ArrayList<String> lista = new ArrayList<String>();
-		for(Video v : catalogoDeVideos.getAllVideoss()) {
+		/* Hacer con java 8*/
+		ArrayList<Video> lista = new ArrayList<Video>();
+		for(Video v : CatalogoVideos.getUnicaInstancia().getAllVideoss()) {
 	
 			if(v.getTitulo().contains(busqueda))
-				lista.add(v.getTitulo());
+				lista.add(v);
 		}
 		return lista;
 	}
 	public Video getVideo(String titulo) {
 		
-		return catalogoDeVideos.getUnicaInstancia().buscarVideo(titulo);
+		return CatalogoVideos.getUnicaInstancia().buscarVideo(titulo);
 	}
 	public List<String> getEtiquetas(){
 		
-		List<String> lista = catalogoDeVideos.getAllVideoss().stream()
+		List<String> lista = CatalogoVideos.getUnicaInstancia().getAllVideoss().stream()
 				.map(video -> video.getEtiquetas())
 				.flatMap(et -> et.stream())
 				.map(e -> e.getNombre())
@@ -191,7 +185,7 @@ public class Controlador {
 		
 		List<String> lista = new ArrayList<String>();
 		
-				catalogoDeVideos.getAllVideoss().stream()
+		CatalogoVideos.getUnicaInstancia().getAllVideoss().stream()
 				.forEach(vi -> {
 							for(String etiS : seleccionadas)
 								for(Etiqueta eti: vi.getEtiquetas())
@@ -205,16 +199,50 @@ public class Controlador {
 	}
 	public Etiqueta agregarEtiqueta(String video,String nomEtiqueta) {
 		
-		return catalogoDeVideos.getUnicaInstancia().setNuevaEtiqueta(video, nomEtiqueta);
+		return CatalogoVideos.getUnicaInstancia().setNuevaEtiqueta(video, nomEtiqueta);
 	}
 	
 	public void crearPlayList(String nombreLista, List<String> videos) {
 		
-		List<Video> listaVideos = catalogoDeVideos.getUnicaInstancia().getListaDeVideos(videos);
+		List<Video> listaVideos = CatalogoVideos.getUnicaInstancia().getListaDeVideos(videos);
 		usuarioActual.creaListaRep(nombreLista, listaVideos);
 	}
 	public void borrarPlayList(String nombreLista) {
 		
 		usuarioActual.borrarPlayList(nombreLista);
+	}
+	public void agregarReproduccion(Video video) {
+		
+		CatalogoVideos.getUnicaInstancia().agregarReproduccion(video);
+	}
+	
+	public boolean cargarVideosDesdeFichero(String xmlFile) {
+		
+		return CargadorVideos.getUnicaInstancia().setArchivoVideos(xmlFile);
+	}
+	public void enteradoCambioVideos(EventObject event) {
+		if (event instanceof VideosEvent) {
+			
+			VideoDAO videoDAO = factoria.getVideoDAO();
+			
+			for (Video video : adaptarVideos(((VideosEvent) event).getVideos())) {
+				
+				CatalogoVideos.getUnicaInstancia().addVideo(video);
+				
+				videoDAO.create(video);
+			}
+		}
+	}
+	
+	public static List<Video> adaptarVideos(Videos videos) {
+		
+		List<Video> lista = new LinkedList<Video>();
+		for (umu.tds.componente.Video video : videos.getVideo())
+			lista.add(new Video(video));
+		return lista;
+	}
+	public void borrarVideo(Video vid) {
+		
+		factoria.getVideoDAO().delete(vid);
 	}
 }

@@ -1,10 +1,12 @@
 package umu.tds.dominio;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class Usuario<playListReciente> {
 
@@ -16,7 +18,8 @@ public class Usuario<playListReciente> {
 	private String password;
 	private String fechaNacimiento;
 	private List<PlayList> misListas;
-	private List<Video> recientes;
+	private Queue<Video> recientes;
+	private final int MAX_SIZE = 5;
 
 	public Usuario(String nombre, String apellido, String email, String nick, String password, String fechaNacimiento) {
 
@@ -27,11 +30,11 @@ public class Usuario<playListReciente> {
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
 		misListas = new ArrayList<PlayList>();
-		recientes = new LinkedList<Video>();
+		recientes = new ArrayDeque<Video>();
 
 	}
 
-	public List<Video> getVideosRecientes() {
+	public Queue<Video> getVideosRecientes() {
 		return recientes;
 	}
 
@@ -153,8 +156,13 @@ public class Usuario<playListReciente> {
 			
 	}
 
-	public void setVideosRecientes(List listaRecientes) {
-		this.recientes = listaRecientes;
+	public void setVideosReciente(Video video) {
+		
+		if(recientes.size() == MAX_SIZE) {
+			
+			recientes.poll();
+		}
+		this.recientes.add(video);
 	}
 	public void borrarPlayList(String nombre) {
 		
@@ -166,6 +174,14 @@ public class Usuario<playListReciente> {
 				break;
 			}
 		}
+	}
+	public void setRecientes(Queue<Video> rec) {
+		
+		recientes = rec;
+	}
+	public void setPlayList(List<PlayList> ml) {
+		
+		misListas = ml;
 	}
 
 }

@@ -1,10 +1,12 @@
 package umu.tds.dao;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 import beans.Entidad;
@@ -45,17 +47,20 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, NICK);
 		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, PASSWORD);
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
-		//List<Video> videosRecientes = servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTE);
-		//List<Playlist> misListas = servPersistencia.recuperarEntidades(eUsuario, PLAYLISTS);
+		Queue<Video> videosRecientes = stringToRecientes(servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTE));
+		List<PlayList> misListas = stringToPlayList(servPersistencia.recuperarPropiedadEntidad(eUsuario, PLAYLISTS));
 		
 
 		Usuario usuario = new Usuario(nombre, apellidos, email, login, password, fechaNacimiento);
 		usuario.setId(eUsuario.getId());
+		usuario.setRecientes(videosRecientes);
+		usuario.setPlayList(misListas);
 
 		return usuario;
 	}
 
 	private Entidad usuarioToEntidad(Usuario usuario) {
+		
 		Entidad eUsuario = new Entidad();
 		eUsuario.setNombre(USUARIO);
 		
@@ -64,18 +69,46 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(NICK, usuario.getNick()), new Propiedad(PASSWORD, usuario.getPassword()),
-				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()))));//,new Propiedad(RECIENTE,codificarVideos(usuario.getVideosRecientes())))));
+				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()),
+				new Propiedad(PLAYLISTS, playListToString(usuario.getPlayList())),
+				new Propiedad(RECIENTE, recientesToString(usuario.getVideosRecientes())))));//,new Propiedad(RECIENTE,codificarVideos(usuario.getVideosRecientes())))));
 		return eUsuario;
 	}
-/*
-	private String codificarVideos(List videosRecientes) {
-		// TODO Auto-generated method stub
-		String codigos = "";
-		for(PlayList recientes: videosRecientes)
-		return null;
+
+	public String recientesToString(Queue<Video> recientes){
+		
+		String linea = "";
+		
+		for(Video v: recientes) {
+			
+			linea += v.getId() + " ";
+		}
+		
+		return linea.trim();
 	}
-*/
-	
+	public Queue<Video> stringToRecientes(String linea){
+		
+		Queue<Video> recientes = new ArrayDeque<Video>();
+		if(linea != null) {
+			
+			String[] vids = linea.split(" ");
+			
+			for(String id: vids) {
+				try {
+					
+					TDSVideoDAO eVideo = new TDSVideoDAO();
+					Video video = eVideo.get(Integer.parseInt(id));
+					recientes.add(video);
+				}catch(Exception e) {
+					
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		
+		return recientes;
+		
+	}
 	public void create(Usuario usuario) {
 		Entidad eUsuario = this.usuarioToEntidad(usuario);
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
@@ -128,50 +161,50 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 			linea = linea.trim();
 			linea += "$";
 		}
-		//System.out.println(linea);
 		return linea;
 		
 	}
 	public List<PlayList> stringToPlayList(String linea) {
 		
 		List<PlayList> lista = new ArrayList<PlayList>();
-		
-		String[] pls = linea.split("\\$");
-		
-		
-		for (String cad: pls) {
+		if(linea != null) {
 			
-			String[] vids = cad.split(" ");
+			String[] pls = linea.split("\\$");
 			
-			List<Video> videos = new ArrayList<Video>();
-			String nombre = "";
 			
-			for (String cad2: vids) {
+			for (String cad: pls) {
 				
-				if(nombre.equals("")) {
+				String[] vids = cad.split(" ");
+				
+				List<Video> videos = new ArrayList<Video>();
+				String nombre = "";
+				
+				for (String cad2: vids) {
 					
-					nombre = cad2;
-				}else {
-					
-					try {
+					if(nombre.equals("")) {
 						
-						TDSVideoDAO eVideo = new TDSVideoDAO();
-						//Video video = eVideo.get(Integer.parseInt(cad2));
-						//videos.add(video);
+						nombre = cad2;
+					}else {
 						
-					}catch (Exception e) {
-						System.out.println(e.getMessage());
+						try {
+							
+							TDSVideoDAO eVideo = new TDSVideoDAO();
+							Video video = eVideo.get(Integer.parseInt(cad2));
+							videos.add(video);
+							
+						}catch (Exception e) {
+							System.out.println(e.getMessage());
+						}
+						
 					}
 					
 				}
+				PlayList playList = new PlayList(nombre, videos);
+
+				lista.add(playList);
 				
 			}
-			PlayList playList = new PlayList(nombre, videos);
-
-			lista.add(playList);
-			
 		}
-		
 		
 		return lista;
 		

@@ -16,19 +16,19 @@ public class CatalogoVideos {
 	private CatalogoVideos (){
 		
 		videosExistentes = new HashMap<Integer, Video>();
-		/*
+		
 		try {
 			factoria = FactoriaDAO.getInstancia();
 			
 			List<Video> listaVideos = factoria.getVideoDAO().getAll();
 			for (Video video : listaVideos) {
 				
-				videosExistentes.put(video.getUrl(), video);
+				videosExistentes.put(video.getId(), video);
 
 			}
 		} catch (DAOException eDAO) {
 			   eDAO.printStackTrace();
-		}*/
+		}
 		
 	}
 	
@@ -86,6 +86,14 @@ public class CatalogoVideos {
 			}
 		}
 		return lista;
+	}
+	public void agregarReproduccion(Video video) {
+		
+		Video vidMod = videosExistentes.get(video.getId());
+		vidMod.setNumRepro(vidMod.getNumRepro() + 1);
+		
+		videosExistentes.replace(vidMod.getId(), vidMod);
+		
 	}
 	
 

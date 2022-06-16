@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -63,6 +64,16 @@ public class NuevaLista {
 		agregaEventoBorrar();
 		
 
+	}
+	public void actualizar() {
+		
+		textFieldNombre.setText("");
+		textFieldBuscarTitulo.setText("");
+		modeloVideos.removeAllElements();
+		modeloListaVideos.removeAllElements();
+		botonAñadir.setEnabled(false);
+		botonQuitar.setEnabled(false);
+		
 	}
 	public JPanel getInstancia() {
 		
@@ -309,13 +320,13 @@ public class NuevaLista {
 	private void mostrarVideosDeBusqueda(String nombre) {
 		
 		modeloVideos.removeAllElements();
-		List<String> videos;
+		List<Video> videos;
 		
 		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
 	
-		for(String nVi: videos) {
+		for(Video nVi: videos) {
 			
-			modeloVideos.addElement(nVi);
+			modeloVideos.addElement(nVi.getTitulo());
 		}
 		
 		videosBuscados.setModel(modeloVideos);

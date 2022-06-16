@@ -38,7 +38,6 @@ public class Explorador {
 	private List<String> selec;
 	private DefaultListModel modeloDis,modeloVideos;
 	private JList allEti,videosBuscados;
-	private JLabel iconoVideo;
 	
 	
 	public Explorador() {
@@ -93,13 +92,6 @@ public class Explorador {
 		gbc_botonBuscar.gridx = 3;
 		gbc_botonBuscar.gridy = 0;
 		panel.add(botonBuscar, gbc_botonBuscar);
-		
-		iconoVideo = new JLabel("");
-		GridBagConstraints gbc_iconoVideo1 = new GridBagConstraints();
-		gbc_iconoVideo1.insets = new Insets(0, 0, 5, 0);
-		gbc_iconoVideo1.gridx = 5;
-		gbc_iconoVideo1.gridy = 0;
-		panel.add(iconoVideo, gbc_iconoVideo1);
 		
 		botonNuevaBusqueda = new JButton("Nueva Busqueda");
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
@@ -208,26 +200,18 @@ public class Explorador {
 	}
 	private void mostrarVideosDeBusqueda(String nombre) {
 		
-		List<String> videos;
+		List<Video> videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
+		
+		videosBuscados = JListRenderer.getInstancia().getListaR(videos);
+		
 		List<String> videosEti;
-		
-		modeloVideos = new DefaultListModel();
-		
-		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
-		
+	
 		if(selec.size() > 0) {
 			
 			videosEti = Controlador.getUnicaInstancia().buscarVideosPorEtiquetas(selec);
 			videos.retainAll(videosEti);
 			
 		}
-		
-		for(String nVi: videos) {
-			
-			modeloVideos.addElement(nVi);
-		}
-		
-		videosBuscados.setModel(modeloVideos);
 
 		videosBuscados.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
@@ -237,25 +221,22 @@ public class Explorador {
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
-						String nombreVideo = item.toString();
-						
-						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						Video vid = (Video) item;
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+						Controlador.getUnicaInstancia().agregarReproduccion(vid);
 						
 					}
-				}else if(me.getClickCount() == 1) {
-					
+				}/*else if (me.getClickCount() == 1) {
 					JList target = (JList) me.getSource();
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
-						String nombreVideo = item.toString();
-						
-						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
-						iconoVideo.setIcon(Controlador.getUnicaInstancia().getIcono(vid.getUrl()));
+						Video vid = (Video) item;
+
+						Controlador.getUnicaInstancia().borrarVideo(vid);
 						
 					}
-				}
+				}*/
 			}
 		});
 	

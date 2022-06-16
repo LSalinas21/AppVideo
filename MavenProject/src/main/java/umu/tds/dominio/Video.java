@@ -1,6 +1,7 @@
 package umu.tds.dominio;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Video {
 	
@@ -8,7 +9,7 @@ public class Video {
 	private String titulo;
 	private int numRepro;
 	private int id;
-	private ArrayList<Etiqueta> listaEtiquetas;
+	private List<Etiqueta> listaEtiquetas;
 	
 	public Video(String url, String titulo, int numRepro) {
 		
@@ -18,12 +19,19 @@ public class Video {
 		listaEtiquetas = new ArrayList<Etiqueta>();
 	}
 	
-	public Video(String url, String titulo, int numRepro, ArrayList<Etiqueta> etiquetas) {
+	public Video(String url, String titulo, int numRepro, List<Etiqueta> etiquetas) {
 		
 		this.url = url;
 		this.titulo = titulo;
 		this.numRepro = numRepro;
 		listaEtiquetas = etiquetas;
+	}
+	public Video(umu.tds.componente.Video video) {
+		
+		this(video.getURL(),video.getTitulo(), 0);
+
+		for(String eti: video.getEtiqueta())
+			listaEtiquetas.add(new Etiqueta(eti));
 	}
 
 	public String getUrl() {
@@ -62,7 +70,7 @@ public class Video {
 		
 		listaEtiquetas.add(etiqueta);
 	}
-	public ArrayList<Etiqueta> getEtiquetas(){
+	public List<Etiqueta> getEtiquetas(){
 		
 		return listaEtiquetas;
 	}

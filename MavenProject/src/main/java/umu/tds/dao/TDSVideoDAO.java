@@ -107,9 +107,9 @@ public class TDSVideoDAO implements VideoDAO{
 		}
 		
 	}
-	private ArrayList<Etiqueta> obtenerEtiquetas(String etiquetas){
+	private List<Etiqueta> obtenerEtiquetas(String etiquetas){
 		
-		ArrayList<Etiqueta> listaEtiquetas = new ArrayList<Etiqueta>();
+		List<Etiqueta> listaEtiquetas = new ArrayList<Etiqueta>();
 		
 		StringTokenizer strTok = new StringTokenizer(etiquetas, ",");
 		
@@ -126,7 +126,7 @@ public class TDSVideoDAO implements VideoDAO{
 		
 		return listaEtiquetas;
 	}
-	private String obtenerCadenaEtiquetas(ArrayList<Etiqueta> etiquetas) {
+	private String obtenerCadenaEtiquetas(List<Etiqueta> etiquetas) {
 		
 		String lineas = "";
 		int contador = etiquetas.size();

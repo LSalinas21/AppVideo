@@ -27,7 +27,11 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.HashMap;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -52,13 +56,17 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-public class Principal<E> extends Thread{
+import pulsador.IEncendidoListener;
+import pulsador.Luz;
+
+public class Principal<E> extends Thread {
 
 	private JPanel panelCabecera,panelUsuario,panelLogo,panelName,panelBotones,panelAcciones;
 	private JPanel panelLogReg,panelLogout,panelPremiun,panelSeccion;
@@ -72,6 +80,11 @@ public class Principal<E> extends Thread{
 	private Recientes panelRecientes;
 	private NuevaLista panelNuevaLista;
 	private boolean band = false;
+	private JPanel panelAccionesPremiun;
+	private JButton botonPDF;
+	private Luz botonCargador;
+	private JButton botonFiltros;
+	private JFileChooser filechooser;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -120,6 +133,7 @@ public class Principal<E> extends Thread{
 		panelLogReg.setVisible(false);
 		labelUsername.setText(Controlador.getUnicaInstancia().getUsuarioActual().getNick());
 		labelUsername.setVisible(true);
+		botonCargador.setVisible(true);
 		
 	}
 	private void deshabilitaAccionesUsuario() {
@@ -132,6 +146,7 @@ public class Principal<E> extends Thread{
 		botonPremiun.setEnabled(false);
 		panelLogReg.setVisible(true);
 		labelUsername.setVisible(false);
+		botonCargador.setVisible(false);
 		
 	}
 	public void mostrarVentana() {
@@ -147,6 +162,7 @@ public class Principal<E> extends Thread{
 		
 		creaPanelCabecera();
 		creaPanelPrincipal();
+		agregarEventoCargarVideos();
 	
 	}
 	private void creaPanelCabecera() {
@@ -216,6 +232,7 @@ public class Principal<E> extends Thread{
 		public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout)(panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "nuevalista");
+				panelNuevaLista.actualizar();
 			}
 		});
 		panelSeccion.add(botonNuevaLista);
@@ -292,6 +309,21 @@ public class Principal<E> extends Thread{
 		panelLogReg.add(botonRegistro);
 		panelAcciones.add(panelLogReg);
 		
+		panelAccionesPremiun = new JPanel();
+		panelUsuario.add(panelAccionesPremiun);
+		
+		botonPDF = new JButton("PDF");
+		panelAccionesPremiun.add(botonPDF);
+		
+		botonCargador = new Luz();
+		panelAccionesPremiun.add(botonCargador);
+		botonCargador.setVisible(false);
+		
+		filechooser = new JFileChooser();
+		
+		botonFiltros = new JButton("Filtros");
+		panelAccionesPremiun.add(botonFiltros);
+		
 		configEventoBotonUsuario();
 		
 		
@@ -358,6 +390,46 @@ public class Principal<E> extends Thread{
 		panelPrincipal.add(panelNuevaLista.getInstancia(), "nuevalista");
 
 		
+	}
+	private void agregarEventoCargarVideos() {
+		
+		botonCargador.addEncendidoListener(new IEncendidoListener(){
+
+			public void enteradoCambioEncendido(EventObject ev) {
+				
+				int returnVal = filechooser.showOpenDialog(panelPrincipal);
+				
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = filechooser.getSelectedFile();
+					try {
+						String videoFilePath = file.getAbsolutePath();
+						
+						if(Controlador.getUnicaInstancia().cargarVideosDesdeFichero(videoFilePath)) {
+							
+							JOptionPane.showMessageDialog(frame, "Vieos cargadas satisfactoriamente",
+									"Carga correcta", JOptionPane.INFORMATION_MESSAGE);
+						}else {
+							
+							JOptionPane.showMessageDialog(frame,
+									"El fichero seleccionado no es compatible con el formato necesario o esta repetido",
+									"Fichero no válido", JOptionPane.ERROR_MESSAGE);
+						}
+
+					} catch (Exception e) {
+						System.out.println("problem accessing file " + file.getAbsolutePath());
+
+					}
+
+					System.out.println("Canciones añadidas correctamente");
+
+				} else {
+					System.out.println("File access canceled by user.");
+
+				}
+				
+			}
+
+		});
 	}
 
 
