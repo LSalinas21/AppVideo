@@ -34,7 +34,7 @@ public class Login{
 	private JPasswordField fieldPass;
 	private JPanel panelNorte,panelCentro,panelSur;
 	private JLabel labelLogo,labelUsuario,labelPass;
-	private JButton botonLogin,botonRegistro;
+	private JButton botonLogin,botonCancelar;
 
 	public Login() {
 		initialize();
@@ -58,7 +58,6 @@ public class Login{
 		configPanelSur();
 		configPanelCentro();
 		creaManejadorBotonLogin();
-		//creaManejadorBotonRegistro();
 		
 		
 	}
@@ -89,7 +88,7 @@ public class Login{
 		labelLogo.setHorizontalTextPosition(SwingConstants.CENTER);
 		labelLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		labelLogo.setHorizontalAlignment(SwingConstants.CENTER);
-		labelLogo.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/imagenes/Amazon-Prime-Video-Logo.png")));
+		labelLogo.setIcon(new ImageIcon(Login.class.getResource("/umu/tds/imagenes/login.png")));
 		panelNorte.add(labelLogo);
 		
 	}
@@ -102,15 +101,14 @@ public class Login{
 		botonLogin = new JButton("Aceptar");
 		panelSur.add(botonLogin);
 		
-		botonRegistro = new JButton("Registro");
-		botonRegistro.addActionListener(new ActionListener() {
+		botonCancelar = new JButton("Cancelar");
+		botonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				Registro ventanaRegistro= new Registro();
-				ventanaRegistro.mostrarVentana();
+				frmLogin.dispose();
 			}
 		});
-		panelSur.add(botonRegistro);
+		panelSur.add(botonCancelar);
 		
 	}
 	private void configPanelCentro() {

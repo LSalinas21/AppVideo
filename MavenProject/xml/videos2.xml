@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<videos xmlns="http://www.tds.es/videos" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:schemaLocation="http://www.tds.es/videos videos.xsd">
+	
+	<video titulo="Ra (Polloman) | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=Zcc4_-rQA64]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Historia</etiqueta>
+	</video>
+
+	<video titulo="Hermes | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=Tda5u5JNRko]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Mitologia</etiqueta>
+		<etiqueta>Grecia</etiqueta>
+	</video>
+	
+	<video titulo="Afrodita | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=q1A7ardAe4o]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Grecia</etiqueta>
+	</video>
+
+	<video titulo="Gilgamesh | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=Cr-hpNA9NuU]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Sumeria</etiqueta>
+		<etiqueta>Brutalidad</etiqueta>
+	</video>
+	
+	<video titulo="Ares | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=2JXEp2im-LA]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Guerra</etiqueta>
+	</video>
+
+</videos>

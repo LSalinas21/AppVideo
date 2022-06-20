@@ -33,7 +33,7 @@ public class TDSPlayListDAO implements PlayListDAO{
 		String nombre = servPersistencia.recuperarPropiedadEntidad(ePlayList, NOMBRE);
 		String videosIds = servPersistencia.recuperarPropiedadEntidad(ePlayList, VIDEOS);
 
-		List<Video> videos = obtenerVideos(videosIds);
+		List<Video> videos = stringToVideo(videosIds);
 			
 			
 		PlayList playList = new PlayList(nombre, videos);
@@ -49,7 +49,7 @@ public class TDSPlayListDAO implements PlayListDAO{
 		
 		ePlayList.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
 				new Propiedad(NOMBRE, playList.getNombre()),
-				new Propiedad(VIDEOS, obtenerIdsVideos(playList.getVideos())))));
+				new Propiedad(VIDEOS, videosToString(playList.getListaVideos())))));
 
 		return ePlayList;
 	}
@@ -74,15 +74,20 @@ public class TDSPlayListDAO implements PlayListDAO{
 
 		Entidad ePlayList = servPersistencia.recuperarEntidad(playList.getId());
 		
-		for (Propiedad prop : ePlayList.getPropiedades()) {
-			if (prop.getNombre().equals(NOMBRE)) {
-				prop.setValor(playList.getNombre());
-			} else if (prop.getNombre().equals(VIDEOS)) {
-				prop.setValor(obtenerIdsVideos(playList.getVideos()));
-			}
-			servPersistencia.modificarPropiedad(prop);
-		}
+		if(ePlayList == null) {
 			
+			for (Propiedad prop : ePlayList.getPropiedades()) {
+				if (prop.getNombre().equals(NOMBRE)) {
+					prop.setValor(playList.getNombre());
+				} else if (prop.getNombre().equals(VIDEOS)) {
+					prop.setValor(videosToString(playList.getVideos()));
+				}
+				servPersistencia.modificarPropiedad(prop);
+			}	
+		}else {
+			
+			create(playList);
+		}	
 	}
 
 	public PlayList get(int id) {
@@ -116,32 +121,46 @@ public class TDSPlayListDAO implements PlayListDAO{
 		}
 			
 	}
-	private List<Video> obtenerVideos(String videos) {
+	private String videosToString(List<Video> lista) {
 		
-		List<Video> ListaVideos = new LinkedList<Video>();
-		StringTokenizer strTok = new StringTokenizer(videos, " ");
-		
-		TDSVideoDAO video = new TDSVideoDAO();
-		
-		while (strTok.hasMoreTokens()) {
-			
-			String sIdVideo = (String) strTok.nextElement();
-			try {
-				int idVideo = Integer.valueOf(sIdVideo);
-				ListaVideos.add(video.get(idVideo));
-			}catch (NumberFormatException e) {
-				System.out.println("El id del video no es un string numerico");
+		String linea = "";
+		if(lista.size() > 0) {
+				
+			for(Video v: lista) {
+					
+				linea += v.getId() + " ";
 			}
+				
+			linea = linea.trim();
+			
 		}
-		return ListaVideos;
-	}
-	private String obtenerIdsVideos(List<Video> videos) {
+		return linea;
 		
-		String lineas = "";
-		for (Video video : videos) {
-			lineas += video.getId() + " ";
+	}
+	private List<Video> stringToVideo(String linea) {
+		
+		List<Video> lista = new ArrayList<Video>();
+		
+		if(linea == null)
+			return lista;
+		if(linea.equals(""))
+			return lista;
+			
+		String[] pls = linea.split(" ");
+			
+		for (String id: pls) {
+						
+			try {	
+					TDSVideoDAO eVideo = new TDSVideoDAO();
+					Video video = eVideo.get(Integer.parseInt(id));
+					lista.add(video);
+							
+				}catch (Exception e) {
+					System.out.println(e.getMessage());
+				}		
 		}
-		return lineas.trim();
+		
+		return lista;
 	}
 
 }

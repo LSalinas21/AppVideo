@@ -15,4 +15,11 @@ public final class TDSFactoriaDAO extends FactoriaDAO {
 		return new TDSVideoDAO();
 	}
 
+	@Override
+	public PlayListDAO getPlayListDAO() {
+		// TODO Auto-generated method stub
+		return new TDSPlayListDAO();
+	}
+	
+
 }

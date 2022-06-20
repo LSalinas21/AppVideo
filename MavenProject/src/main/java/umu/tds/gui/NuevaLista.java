@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -24,6 +25,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import umu.tds.controlador.Controlador;
 import umu.tds.dominio.Video;
+import umu.tds.herramientas.JListRenderer;
 
 public class NuevaLista {
 	
@@ -35,8 +37,9 @@ public class NuevaLista {
 	private JScrollPane panelListaVideos,panelVideosBuscados;
 	private DefaultListModel modeloVideos,modeloListaVideos;
 	private JList videosBuscados,videosPlaylist;
-	private String videoSeleccionado, videoSeleccionadoQuitar, listaActual;
-	private List <String> misListas;
+	private Video videoSeleccionado;
+	private String listaActual,videoSeleccionadoQuitar;
+	private List <Video> misListas;
 
 	
 	public NuevaLista() {
@@ -73,6 +76,8 @@ public class NuevaLista {
 		modeloListaVideos.removeAllElements();
 		botonAñadir.setEnabled(false);
 		botonQuitar.setEnabled(false);
+		botonAceptar.setEnabled(false);
+		limpiarPanel();
 		
 	}
 	public JPanel getInstancia() {
@@ -92,7 +97,7 @@ public class NuevaLista {
 		gbl_panel_3.columnWidths = new int[] {10, 86, 0, 30, 0};
 		gbl_panel_3.rowHeights = new int[] {5, 0, 0, 0, 30, 30, 30, 30, 30, 0, 0, 30, 0};
 		gbl_panel_3.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelIzquierdo.setLayout(gbl_panel_3);
 	}
 	private void agregaLabels() {
@@ -147,9 +152,9 @@ public class NuevaLista {
 		
 		botonBorrarLista = new JButton("Borrar");
 		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
-		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_5.gridx = 1;
-		gbc_btnNewButton_5.gridy = 3;
+		gbc_btnNewButton_5.insets = new Insets(0, 0, 5, 0);
+		gbc_btnNewButton_5.gridx = 3;
+		gbc_btnNewButton_5.gridy = 2;
 		panelIzquierdo.add(botonBorrarLista, gbc_btnNewButton_5);
 		
 		botonBorrarLista.setEnabled(false);
@@ -181,10 +186,11 @@ public class NuevaLista {
 		
 		botonAceptar.setEnabled(false);
 		
+		
 		botonNuevaBusqueda = new JButton("Nueva Busqueda");
 		GridBagConstraints gbc_btnNewButton_7 = new GridBagConstraints();
 		gbc_btnNewButton_7.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_7.gridx = 1;
+		gbc_btnNewButton_7.gridx = 3;
 		gbc_btnNewButton_7.gridy = 2;
 		panelDerecho.add(botonNuevaBusqueda, gbc_btnNewButton_7);
 		
@@ -208,9 +214,9 @@ public class NuevaLista {
 		gbc_scrollPane_3.ipadx = 10;
 		gbc_scrollPane_3.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_3.gridwidth = 3;
-		gbc_scrollPane_3.gridheight = 5;
+		gbc_scrollPane_3.gridheight = 6;
 		gbc_scrollPane_3.gridx = 1;
-		gbc_scrollPane_3.gridy = 4;
+		gbc_scrollPane_3.gridy = 3;
 		panelIzquierdo.add(panelListaVideos, gbc_scrollPane_3);
 	}
 	private void agregaPanelVideosBuscados() {
@@ -292,7 +298,7 @@ public class NuevaLista {
 				
 				if(!misListas.contains(videoSeleccionado)) {
 					
-					modeloListaVideos.addElement(videoSeleccionado);
+					modeloListaVideos.addElement(videoSeleccionado.getTitulo());
 					misListas.add(videoSeleccionado);
 					botonAceptar.setEnabled(true);
 				}
@@ -309,8 +315,9 @@ public class NuevaLista {
 				if(videoSeleccionadoQuitar != null) {
 					
 					modeloListaVideos.removeElement(videoSeleccionadoQuitar);
-					misListas.remove(videoSeleccionadoQuitar);
-					videoSeleccionadoQuitar = "";
+					
+					misListas.remove(Controlador.getUnicaInstancia().getVideo(videoSeleccionadoQuitar));
+					videoSeleccionadoQuitar = null;
 				}
 			}
 		});
@@ -322,15 +329,10 @@ public class NuevaLista {
 		modeloVideos.removeAllElements();
 		List<Video> videos;
 		
-		videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
-	
-		for(Video nVi: videos) {
-			
-			modeloVideos.addElement(nVi.getTitulo());
-		}
-		
-		videosBuscados.setModel(modeloVideos);
+		videos = Controlador.getUnicaInstancia().buscarVideos(nombre, new ArrayList<String>());
 
+		videosBuscados = JListRenderer.getInstancia().getListaR(videos);
+		
 		videosBuscados.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
@@ -339,9 +341,8 @@ public class NuevaLista {
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
-						String nombreVideo = item.toString();
+						Video vid = (Video)item;
 						
-						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
 						
 					}
@@ -352,8 +353,9 @@ public class NuevaLista {
 					if (index >= 0) {
 						
 						Object item = target.getModel().getElementAt(index);
-						String nombreVideo = item.toString();
-						videoSeleccionado = nombreVideo;
+						Video vid = (Video)item;
+						
+						videoSeleccionado = vid;
 						
 					}
 					
@@ -418,12 +420,14 @@ public class NuevaLista {
 		
 		videosPlaylist.setModel(modeloListaVideos);
 		
-		if(misListas.size() != 0) {
+		if(misListas != null) {
 			
-			for(String titu: misListas)
-				modeloListaVideos.addElement(titu);
+			for(Video vid: misListas)
+				modeloListaVideos.addElement(vid.getTitulo());
+			
 		}else {
 			
+			misListas = new ArrayList<Video>();
 			botonAceptar.setEnabled(true);
 			botonBorrarLista.setEnabled(false);
 		}
@@ -442,7 +446,9 @@ public class NuevaLista {
 						String nombreVideo = item.toString();
 						
 						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
+						Controlador.getUnicaInstancia().addReciente(vid);
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+						Controlador.getUnicaInstancia().agregarReproduccion(vid);
 					}
 				}else if (me.getClickCount() == 1) {
 					
@@ -450,7 +456,7 @@ public class NuevaLista {
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
-
+						
 						videoSeleccionadoQuitar = item.toString();
 						
 						
@@ -460,6 +466,11 @@ public class NuevaLista {
 		});
 
 		panelListaVideos.setViewportView(videosPlaylist);
+	}
+	private void limpiarPanel() {
+		
+		JList<String> videosBuscados = new JList<String>();
+		panelVideosBuscados.setViewportView(videosBuscados);
 	}
 
 }

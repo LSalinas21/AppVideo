@@ -31,4 +31,5 @@ public abstract class FactoriaDAO {
 	
 	public abstract UsuarioDAO getUsuarioDAO();	
 	public abstract VideoDAO getVideoDAO();	
+	public abstract PlayListDAO getPlayListDAO();
 }

@@ -40,6 +40,7 @@ public class CatalogoUsuarios {
 			factoria = FactoriaDAO.getInstancia();
 			
 			List<Usuario> listaAsistentes = factoria.getUsuarioDAO().getAll();
+
 			for (Usuario usuario : listaAsistentes) {
 				asistentesPorID.put(usuario.getId(), usuario);
 				asistentesPorLogin.put(usuario.getNick(), usuario);

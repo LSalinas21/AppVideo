@@ -58,18 +58,17 @@ public class CatalogoVideos {
 		}
 		return null;
 	}
-	public Etiqueta setNuevaEtiqueta(String video, String nomEtiqueta) {
+	public Etiqueta setNuevaEtiqueta(Video video, String nomEtiqueta) {
 		
-		for(Video v : videosExistentes.values())
-			if(v.getTitulo().equals(video)) {
-				Etiqueta nueva = new Etiqueta(nomEtiqueta);
-				v.agregarEtiqueta(nueva);
-				videosExistentes.replace(v.getId(), v);
-				return nueva;
-			}
-		return null;
-				
+		Video v = videosExistentes.get(video.getId());
+
+		Etiqueta nueva = new Etiqueta(nomEtiqueta);
 		
+		v.agregarEtiqueta(nueva);
+		videosExistentes.replace(v.getId(), v);
+		
+		return nueva;
+
 	}
 	public List<Video> getListaDeVideos(List<String> videos){
 		
@@ -94,6 +93,10 @@ public class CatalogoVideos {
 		
 		videosExistentes.replace(vidMod.getId(), vidMod);
 		
+	}
+	public void borrarVideo(Video video) {
+		
+		videosExistentes.remove(video.getId());
 	}
 	
 

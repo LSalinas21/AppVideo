@@ -65,6 +65,8 @@ import java.awt.event.ItemEvent;
 
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
+import javax.swing.ImageIcon;
+import java.awt.Component;
 
 public class Principal<E> extends Thread {
 
@@ -79,12 +81,14 @@ public class Principal<E> extends Thread {
 	private MisListas panelMisListas;
 	private Recientes panelRecientes;
 	private NuevaLista panelNuevaLista;
+	private TopTen panelTopTen;
 	private boolean band = false;
 	private JPanel panelAccionesPremiun;
 	private JButton botonPDF;
 	private Luz botonCargador;
-	private JButton botonFiltros;
 	private JFileChooser filechooser;
+	private JComboBox filtros;
+	private JButton botonTopTen;
 
 	public Principal() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		initialize();
@@ -108,9 +112,20 @@ public class Principal<E> extends Thread {
 						
 						panelPrincipal.setVisible(true);
 					}
+					if(Controlador.getUnicaInstancia().getUsuarioActual().getPremiun()) {
+						
+						panelAccionesPremiun.setVisible(true);
+						botonPremiun.setEnabled(false);
+						botonTopTen.setEnabled(true);
+					}else {
+						
+						panelAccionesPremiun.setVisible(false);
+						botonPremiun.setEnabled(true);
+						botonTopTen.setEnabled(false);
+					}
 					//frame.revalidate();
 				}else {
-
+					
 					deshabilitaAccionesUsuario();
 					//frame.revalidate();
 				}
@@ -133,7 +148,7 @@ public class Principal<E> extends Thread {
 		panelLogReg.setVisible(false);
 		labelUsername.setText(Controlador.getUnicaInstancia().getUsuarioActual().getNick());
 		labelUsername.setVisible(true);
-		botonCargador.setVisible(true);
+		filtros.setSelectedItem(Controlador.getUnicaInstancia().getFiltroActivo());
 		
 	}
 	private void deshabilitaAccionesUsuario() {
@@ -146,7 +161,8 @@ public class Principal<E> extends Thread {
 		botonPremiun.setEnabled(false);
 		panelLogReg.setVisible(true);
 		labelUsername.setVisible(false);
-		botonCargador.setVisible(false);
+		botonTopTen.setEnabled(false);
+		panelAccionesPremiun.setVisible(false);
 		
 	}
 	public void mostrarVentana() {
@@ -157,13 +173,26 @@ public class Principal<E> extends Thread {
 		
 		UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
 		frame = new JFrame();
-		frame.setBounds(100, 100, 630, 449);
+		frame.setSize(new Dimension(700,500));
+		frame.setMinimumSize(new Dimension(650,450));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		frame.setLocationRelativeTo(null);
 		creaPanelCabecera();
 		creaPanelPrincipal();
 		agregarEventoCargarVideos();
+		agregaEventoPremiun();
+		eventoGeneraPDF();
 	
+	}
+	private void agregaEventoPremiun() {
+		
+		botonPremiun.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+				
+				Controlador.getUnicaInstancia().setPremiun();
+			}
+		});
+		
 	}
 	private void creaPanelCabecera() {
 		
@@ -224,6 +253,7 @@ public class Principal<E> extends Thread {
 		public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout)(panelPrincipal.getLayout());
 				cl.show(panelPrincipal, "recientes");
+				panelRecientes.actualizar();
 			}
 		});
 		panelSeccion.add(botonRecientes);
@@ -236,6 +266,17 @@ public class Principal<E> extends Thread {
 			}
 		});
 		panelSeccion.add(botonNuevaLista);
+		
+		botonTopTen = new JButton("Top 10");
+		botonTopTen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					CardLayout cl = (CardLayout)(panelPrincipal.getLayout());
+					cl.show(panelPrincipal, "topten");
+					panelTopTen.actualizar();
+				}
+			});
+		panelSeccion.add(botonTopTen);
+		botonTopTen.setEnabled(false);
 		
 	}
 	private void creaPanelLogout() {
@@ -281,7 +322,10 @@ public class Principal<E> extends Thread {
 	}
 	private void configPanelLogo() {
 		
-		labelLogoPrincipal = new JLabel("AppVideo");
+		labelLogoPrincipal = new JLabel("");
+		labelLogoPrincipal.setIcon(new ImageIcon(Principal.class.getResource("/umu/tds/imagenes/logoAppVideo3.png")));
+		labelLogoPrincipal.setAlignmentX(Component.CENTER_ALIGNMENT);
+		labelLogoPrincipal.setSize(new Dimension(10, 10));
 		panelLogo.add(labelLogoPrincipal);
 	}
 	private void configPanelUsuario() {
@@ -311,22 +355,46 @@ public class Principal<E> extends Thread {
 		
 		panelAccionesPremiun = new JPanel();
 		panelUsuario.add(panelAccionesPremiun);
+		panelAccionesPremiun.setVisible(false);
 		
 		botonPDF = new JButton("PDF");
 		panelAccionesPremiun.add(botonPDF);
 		
 		botonCargador = new Luz();
 		panelAccionesPremiun.add(botonCargador);
-		botonCargador.setVisible(false);
+		
+		filtros = new JComboBox();
+		panelAccionesPremiun.add(filtros);
+		filtros.setModel(new DefaultComboBoxModel(Controlador.getUnicaInstancia().getFiltros()));
 		
 		filechooser = new JFileChooser();
 		
-		botonFiltros = new JButton("Filtros");
-		panelAccionesPremiun.add(botonFiltros);
-		
 		configEventoBotonUsuario();
+		eventosFiltros();
 		
 		
+	}
+	private void eventoGeneraPDF() {
+		
+		botonPDF.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+					Controlador.getUnicaInstancia().generarPDF(frame);
+				}
+			});
+	}
+	private void eventosFiltros() {
+		
+		filtros.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					
+					Controlador.getUnicaInstancia().setFiltroUsuario(e.getItem().toString());
+						
+				}
+			}
+		});
 	}
 	private void configEventoBotonUsuario() {
 		
@@ -355,7 +423,10 @@ public class Principal<E> extends Thread {
 
 					if (loginOut) {
 						
+						CardLayout cl = (CardLayout)(panelPrincipal.getLayout());
+						cl.show(panelPrincipal, "explorador");
 						deshabilitaAccionesUsuario();
+						panelExplorador.limpiarPanel();
 						panelPrincipal.setVisible(false);
 					} 
 				}
@@ -388,6 +459,9 @@ public class Principal<E> extends Thread {
 		
 		panelNuevaLista = new NuevaLista();
 		panelPrincipal.add(panelNuevaLista.getInstancia(), "nuevalista");
+		
+		panelTopTen = new TopTen();
+		panelPrincipal.add(panelTopTen.getInstancia(), "topten");
 
 		
 	}
@@ -403,7 +477,7 @@ public class Principal<E> extends Thread {
 					File file = filechooser.getSelectedFile();
 					try {
 						String videoFilePath = file.getAbsolutePath();
-						
+
 						if(Controlador.getUnicaInstancia().cargarVideosDesdeFichero(videoFilePath)) {
 							
 							JOptionPane.showMessageDialog(frame, "Vieos cargadas satisfactoriamente",

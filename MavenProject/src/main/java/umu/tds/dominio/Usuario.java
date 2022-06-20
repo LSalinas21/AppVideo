@@ -1,5 +1,8 @@
 package umu.tds.dominio;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import umu.tds.dominio.filtro.FactoriaFiltro;
+import umu.tds.dominio.filtro.FiltroVideo;
 
 public class Usuario<playListReciente> {
 
@@ -20,6 +26,8 @@ public class Usuario<playListReciente> {
 	private List<PlayList> misListas;
 	private Queue<Video> recientes;
 	private final int MAX_SIZE = 5;
+	private FiltroVideo filtro;
+	private boolean premiun;
 
 	public Usuario(String nombre, String apellido, String email, String nick, String password, String fechaNacimiento) {
 
@@ -31,6 +39,9 @@ public class Usuario<playListReciente> {
 		this.fechaNacimiento = fechaNacimiento;
 		misListas = new ArrayList<PlayList>();
 		recientes = new ArrayDeque<Video>();
+		premiun = false;
+
+		filtro = FactoriaFiltro.getInstancia().crearFiltro();
 
 	}
 
@@ -49,7 +60,10 @@ public class Usuario<playListReciente> {
 	public String getApellidos() {
 		return apellidos;
 	}
-
+	public String filtroToString() {
+		
+		return filtro.getClass().getName();
+	}
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
@@ -120,22 +134,19 @@ public class Usuario<playListReciente> {
 		
 		return misListas;
 	}
-	public List<String> getListaVideos(String nombre) {
-		
-		List<String> lista = new ArrayList<String>();
+	public List<Video> getListaVideos(String nombre) {
+
 		for(PlayList l: misListas) {
 
 			if(l.getNombre().equals(nombre)) {
 				
-				lista = l.getListaVideos();
+				return l.getListaVideos();
 			}
 		}
-		return lista;
+		return null;
 	}
 
-	public void creaListaRep(String nombreLista, List<Video> listaVideos) {
-		
-		boolean nueva = true;
+	public PlayList creaListaRep(String nombreLista, List<Video> listaVideos) {
 		
 		for(PlayList pl: misListas) {
 			
@@ -143,37 +154,45 @@ public class Usuario<playListReciente> {
 				
 				misListas.remove(pl);
 				pl.setVideos(listaVideos);
-				misListas.add(pl);
-				nueva = false;
-				break;
+				return pl;
 			}
 		}
-		if(nueva) {
 			
-			PlayList lista = new PlayList(nombreLista, listaVideos);
-			misListas.add(lista);
-		}
-			
+		PlayList lista = new PlayList(nombreLista, listaVideos);
+		return lista;	
 	}
-
+	public void actualizarLista(PlayList pl) {
+		
+		misListas.add(pl);
+	}
 	public void setVideosReciente(Video video) {
 		
-		if(recientes.size() == MAX_SIZE) {
+		Video aux = null;
+		for(Video vi: recientes)
+			if(vi.getUrl().equals(video.getUrl()))
+				aux = vi;
+				
+		if (aux != null) {
+			
+			recientes.remove(aux);
+			
+		}else if(recientes.size() == MAX_SIZE) {
 			
 			recientes.poll();
 		}
 		this.recientes.add(video);
 	}
-	public void borrarPlayList(String nombre) {
+	public PlayList borrarPlayList(String nombre) {
 		
 		for(PlayList pl: misListas) {
 			
 			if(pl.getNombre().equals(nombre)) {
 				
 				misListas.remove(pl);
-				break;
+				return pl;
 			}
 		}
+		return null;
 	}
 	public void setRecientes(Queue<Video> rec) {
 		
@@ -182,6 +201,42 @@ public class Usuario<playListReciente> {
 	public void setPlayList(List<PlayList> ml) {
 		
 		misListas = ml;
+	}
+	public void setFiltro(String filtro) {
+		this.filtro = FactoriaFiltro.getInstancia().crearFiltro(filtro, this);
+	}
+	public FiltroVideo getFiltro() {
+		return filtro;
+	}
+	public boolean esMenor() {
+		
+		int edad = Period.between(LocalDate.parse(fechaNacimiento, DateTimeFormatter.ofPattern("dd/MM/yyyy")), LocalDate.now()).getYears();
+		if (edad < 18)
+			return true;
+		else
+			return false;
+	}
+	public void setPremiun(String op) {
+		
+		if(op.equals("yes"))
+			premiun = true;
+		else
+			premiun = false;
+	}
+	public boolean getPremiun() {
+		
+		return premiun;
+	}
+	public String getPremiunToString() {
+		
+		if(premiun)
+			return "yes";
+		else
+			return "no";
+	}
+	public String getFiltroToString() {
+		
+		return FiltroVideo.esTipoFiltro(filtro);
 	}
 
 }

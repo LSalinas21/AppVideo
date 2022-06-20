@@ -1,4 +1,4 @@
-package  umu.tds.gui;
+package  umu.tds.herramientas;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,6 +30,7 @@ public class VideoApp extends JFrame {
 		
 		setDefaultCloseOperation(0);
 		setBounds(0, 0, 410, 500);
+		this.setLocationRelativeTo(null);
 		
 
 		contentPane = (JPanel) getContentPane();

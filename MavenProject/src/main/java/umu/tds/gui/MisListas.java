@@ -27,7 +27,9 @@ import javax.swing.event.MouseInputAdapter;
 
 import umu.tds.controlador.Controlador;
 import umu.tds.dominio.Etiqueta;
+import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Video;
+import umu.tds.herramientas.JListRenderer;
 
 public class MisListas {
 	
@@ -39,7 +41,7 @@ public class MisListas {
 	private JButton botonCrear;
 	private JList etiquetasVideo;
 	private DefaultListModel modeloVideosLista, modeloEtiqeutasVideoSele;
-	private String videoSeleccionado;
+	private Video videoSeleccionado;
 	
 	public MisListas() {
 		
@@ -48,9 +50,9 @@ public class MisListas {
 		panel = new JPanel();
 		GridBagLayout gbl_panelMisListas = new GridBagLayout();
 		gbl_panelMisListas.columnWidths = new int[]{10, 50, 79, 0, 0, 50, 20, 0, 0, 0};
-		gbl_panelMisListas.rowHeights = new int[]{10, 0, 0, 0, 0, 10, 0};
+		gbl_panelMisListas.rowHeights = new int[]{10, 0, 0, 0, 0, 0, 0, 10, 0};
 		gbl_panelMisListas.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panelMisListas.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panelMisListas);
 		
 		agregaEtiquetas();
@@ -68,6 +70,7 @@ public class MisListas {
 		textFieldNuevaEtiqueta.setText("");
 		modeloVideosLista.removeAllElements();
 		modeloEtiqeutasVideoSele.removeAllElements();
+		limpiarPanel();
 		
 	}
 	private void agregaEtiquetas() {
@@ -84,16 +87,49 @@ public class MisListas {
 		GridBagConstraints gbc_lblNewLabel_14 = new GridBagConstraints();
 		gbc_lblNewLabel_14.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_14.anchor = GridBagConstraints.EAST;
-		gbc_lblNewLabel_14.gridx = 5;
+		gbc_lblNewLabel_14.gridx = 3;
 		gbc_lblNewLabel_14.gridy = 2;
 		panel.add(labelNuevaEtiqueta, gbc_lblNewLabel_14);
+		
+		textFieldNuevaEtiqueta = new JTextField();
+		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
+		gbc_textField_1.gridwidth = 3;
+		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField_1.gridx = 4;
+		gbc_textField_1.gridy = 2;
+		panel.add(textFieldNuevaEtiqueta, gbc_textField_1);
+		textFieldNuevaEtiqueta.setColumns(10);
+		
+		botonCrear = new JButton("Crear");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 7;
+		gbc_btnNewButton.gridy = 2;
+		panel.add(botonCrear, gbc_btnNewButton);
 		
 		labelEtiquetasDeVideo = new JLabel("Etiquetas");
 		GridBagConstraints gbc_labelEtiquetasDeVideo = new GridBagConstraints();
 		gbc_labelEtiquetasDeVideo.insets = new Insets(0, 0, 5, 5);
 		gbc_labelEtiquetasDeVideo.gridx = 5;
-		gbc_labelEtiquetasDeVideo.gridy = 4;
+		gbc_labelEtiquetasDeVideo.gridy = 3;
 		panel.add(labelEtiquetasDeVideo, gbc_labelEtiquetasDeVideo);
+		
+		panelEtiquetas = new JScrollPane();
+		panelEtiquetas.setPreferredSize(new Dimension(100,100));
+		
+		etiquetasVideo = new JList();
+		
+		GridBagConstraints gbc_etiquetasVideo = new GridBagConstraints();
+		gbc_etiquetasVideo.gridheight = 2;
+		gbc_etiquetasVideo.gridwidth = 4;
+		gbc_etiquetasVideo.insets = new Insets(0, 0, 5, 5);
+		gbc_etiquetasVideo.fill = GridBagConstraints.BOTH;
+		gbc_etiquetasVideo.gridx = 4;
+		gbc_etiquetasVideo.gridy = 4;
+		
+		panelEtiquetas.add(etiquetasVideo);
+		panel.add(panelEtiquetas, gbc_etiquetasVideo);
 	}
 	private void agregaTextArea() {
 		
@@ -122,29 +158,6 @@ public class MisListas {
 		gbc_textAreaBuscarMisListas.gridx = 2;
 		gbc_textAreaBuscarMisListas.gridy = 1;
 		panel.add(textAreaBuscarMisListas, gbc_textAreaBuscarMisListas);
-		
-		textFieldNuevaEtiqueta = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 6;
-		gbc_textField_1.gridy = 2;
-		panel.add(textFieldNuevaEtiqueta, gbc_textField_1);
-		textFieldNuevaEtiqueta.setColumns(10);
-		
-		panelEtiquetas = new JScrollPane();
-		panelEtiquetas.setPreferredSize(new Dimension(100,100));
-		
-		etiquetasVideo = new JList();
-		
-		GridBagConstraints gbc_etiquetasVideo = new GridBagConstraints();
-		gbc_etiquetasVideo.insets = new Insets(0, 0, 5, 5);
-		gbc_etiquetasVideo.fill = GridBagConstraints.BOTH;
-		gbc_etiquetasVideo.gridx = 6;
-		gbc_etiquetasVideo.gridy = 4;
-		
-		panelEtiquetas.add(etiquetasVideo);
-		panel.add(panelEtiquetas, gbc_etiquetasVideo);
 	}
 	private void agregaPanelMisListasBuscadas() {
 		
@@ -152,39 +165,27 @@ public class MisListas {
 		
 		GridBagConstraints gbc_panelMisListasBuscadas = new GridBagConstraints();
 		gbc_panelMisListasBuscadas.gridwidth = 2;
-		gbc_panelMisListasBuscadas.gridheight = 3;
+		gbc_panelMisListasBuscadas.gridheight = 4;
 		gbc_panelMisListasBuscadas.insets = new Insets(0, 0, 5, 5);
 		gbc_panelMisListasBuscadas.fill = GridBagConstraints.BOTH;
 		gbc_panelMisListasBuscadas.gridx = 1;
-		gbc_panelMisListasBuscadas.gridy = 2;
+		gbc_panelMisListasBuscadas.gridy = 3;
 		
 		panelBuscadas = new JScrollPane();
-		panelBuscadas.setPreferredSize(new Dimension(340,285));
-		panelMisListasBuscadas.add(panelBuscadas);
-		panel.add(panelMisListasBuscadas, gbc_panelMisListasBuscadas);
+		panel.add(panelBuscadas, gbc_panelMisListasBuscadas);
 	}
 	private void agregaBotones() {
-		
-		botonCrear = new JButton("Crear");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 7;
-		gbc_btnNewButton.gridy = 2;
-		panel.add(botonCrear, gbc_btnNewButton);
 		
 		agregaEventoBotonCrear();
 	}
 	
 	private void mostrarVideosLista(String nombre) {
 		
-		List<String> misListas;
+		List<Video> misListas;
 		misListas = Controlador.getUnicaInstancia().getLista(nombre);
 		JList videosPlaylist = new JList();
-		videosPlaylist.setModel(modeloVideosLista);
-		for(String titu: misListas)
-			modeloVideosLista.addElement(titu);
-		
-		
+		videosPlaylist = JListRenderer.getInstancia().getListaR(misListas);
+
 		videosPlaylist.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
@@ -196,10 +197,10 @@ public class MisListas {
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
-						String nombreVideo = item.toString();
+						Video video = (Video) item;
 						
-						videoSeleccionado = nombreVideo;
-						String[] d = Controlador.getUnicaInstancia().getEtiquetasVideo(nombreVideo);
+						videoSeleccionado = video;
+						String[] d = Controlador.getUnicaInstancia().getEtiquetasVideo(video.getTitulo());
 						
 						for(int i = 0; i < d.length; i++) {
 							
@@ -214,11 +215,12 @@ public class MisListas {
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
-						String nombreVideo = item.toString();
-						videoSeleccionado = nombreVideo;
+						Video video = (Video)item;
+						videoSeleccionado = video;
 						
-						Video vid = Controlador.getUnicaInstancia().getVideo(nombreVideo);
-						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+						Controlador.getUnicaInstancia().addReciente(video);
+						Controlador.getUnicaInstancia().reproducir(video.getTitulo(), video.getUrl());
+						Controlador.getUnicaInstancia().agregarReproduccion(video);
 					}
 				}
 			}
@@ -251,6 +253,11 @@ public class MisListas {
 			
 		});
 		panelEtiquetas.setViewportView(etiquetasVideo);
+	}
+	private void limpiarPanel() {
+		
+		JList<String> videosDeLista= new JList<String>();
+		panelBuscadas.setViewportView(videosDeLista);
 	}
 
 }

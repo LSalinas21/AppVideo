@@ -56,11 +56,12 @@ public class TDSVideoDAO implements VideoDAO{
 		return eVideo;
 	}
 	
-	public void create(Video video) {
+	public Video create(Video video) {
 		
 		Entidad eVideo = this.videoToEntidad(video);
 		eVideo = servPersistencia.registrarEntidad(eVideo);
 		video.setId(eVideo.getId());
+		return video;
 		
 	}
 	
@@ -139,6 +140,4 @@ public class TDSVideoDAO implements VideoDAO{
 		}
 		return lineas.trim();
 	}
-
-
 }

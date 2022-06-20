@@ -1,4 +1,4 @@
-package umu.tds.gui;
+package umu.tds.herramientas;
 
 import java.awt.Color;
 import java.awt.Component;

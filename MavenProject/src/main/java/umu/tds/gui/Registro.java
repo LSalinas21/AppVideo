@@ -33,6 +33,7 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.ImageIcon;
 
 public class Registro {
 
@@ -62,7 +63,7 @@ public class Registro {
 	private JLabel lblFechaError;
 	private JLabel lblApellidosError;
 	private JLabel lblNombreError;
-	private int frameLargo = 340;
+	private int frameLargo = 420;
 	private Border bordeDefault;
 	
 	private Pattern pat = Pattern.compile("[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z0-9]*");
@@ -89,7 +90,7 @@ public class Registro {
 		frmRegistro.setResizable(false);
 		frmRegistro.getContentPane().setLayout(new BorderLayout());
 		
-		frmRegistro.setBounds(100, 100, 450, 340);
+		frmRegistro.setBounds(100, 100, 450, 420);
 		
 		
 		creaIconoRegistro();
@@ -163,7 +164,8 @@ public class Registro {
 		frmRegistro.getContentPane().add(panelNorte, BorderLayout.NORTH);
 		panelNorte.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		LabelRegistroIcono = new JLabel("Registro");
+		LabelRegistroIcono = new JLabel("");
+		LabelRegistroIcono.setIcon(new ImageIcon(Registro.class.getResource("/umu/tds/imagenes/registro.png")));
 		LabelRegistroIcono.setHorizontalAlignment(SwingConstants.CENTER);
 		panelNorte.add(LabelRegistroIcono);
 	}
@@ -443,7 +445,8 @@ public class Registro {
 			labelNombre.setForeground(null);
 			textNombre.setBorder(bordeDefault);
 			
-			tamFrameAux -=10;
+			if(tamFrameAux > frameLargo) 
+				tamFrameAux -=10;
 			
 		}
 		if (textApellido.getText().trim().isEmpty()) {
@@ -460,7 +463,8 @@ public class Registro {
 			labelApellido.setForeground(null);
 			textApellido.setBorder(bordeDefault);
 			
-			tamFrameAux -=10;
+			if(tamFrameAux > frameLargo) 
+				tamFrameAux -=10;
 			
 		}
 		if (textEmail.getText().trim().isEmpty()) {
@@ -481,7 +485,8 @@ public class Registro {
 				labelEmail.setForeground(null);
 				textEmail.setBorder(bordeDefault);
 				
-				tamFrameAux -=10;
+				if(tamFrameAux > frameLargo) 
+					tamFrameAux -=10;
 		     } else {
 		    	 
 		    	 lblEmailError.setText("Formato incorrecto Ejm: correo@um.es");
@@ -498,7 +503,8 @@ public class Registro {
 			labelEmail.setForeground(null);
 			textEmail.setBorder(bordeDefault);
 			
-			tamFrameAux -=10;
+			if(tamFrameAux > frameLargo) 
+				tamFrameAux -=10;
 			
 		}
 		if (textUsuario.getText().trim().isEmpty()) {
@@ -515,7 +521,8 @@ public class Registro {
 			labelUsuario.setForeground(null);
 			textUsuario.setBorder(bordeDefault);
 			
-			tamFrameAux -=10;
+			if(tamFrameAux > frameLargo) 
+				tamFrameAux -=10;
 			
 		}
 		String password = new String(textPass.getPassword());
@@ -533,7 +540,8 @@ public class Registro {
 			labelPass.setForeground(null);
 			textPass.setBorder(bordeDefault);
 			
-			tamFrameAux -=10;
+			if(tamFrameAux > frameLargo) 
+				tamFrameAux -=10;
 			
 		}
 		
@@ -552,7 +560,8 @@ public class Registro {
 			labelFechaN.setForeground(null);
 			dateChooser.setBorder(bordeDefault);
 			
-			tamFrameAux -=10;
+			if(tamFrameAux > frameLargo) 
+				tamFrameAux -=10;
 			
 		}
 		
@@ -565,9 +574,9 @@ public class Registro {
 			
 			
 		}
+			
 		frmRegistro.setSize(450, tamFrameAux);
 		frmRegistro.revalidate();
-		
 		
 		return salida;
 	}

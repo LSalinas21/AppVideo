@@ -6,7 +6,7 @@ import umu.tds.dominio.Video;
 
 public interface VideoDAO {
 
-	void create(Video existente);
+	Video create(Video existente);
 	boolean delete(Video existente);
 	void update(Video existente);
 	Video get(int id);

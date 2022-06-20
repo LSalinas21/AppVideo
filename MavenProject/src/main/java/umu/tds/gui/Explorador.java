@@ -26,6 +26,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import umu.tds.controlador.Controlador;
 import umu.tds.dominio.Video;
+import umu.tds.herramientas.JListRenderer;
 
 public class Explorador {
 	
@@ -36,7 +37,7 @@ public class Explorador {
 	private JButton botonBuscar;
 	private JButton botonNuevaBusqueda;
 	private List<String> selec;
-	private DefaultListModel modeloDis,modeloVideos;
+	private DefaultListModel modeloDis;
 	private JList allEti,videosBuscados;
 	
 	
@@ -47,9 +48,9 @@ public class Explorador {
 		
 		GridBagLayout gbl_panelExplorador = new GridBagLayout();
 		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 27, 0, 0};
-		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 27, 116, 0};
+		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 0, 27, 9, 0};
 		gbl_panelExplorador.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelExplorador.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelExplorador.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panelExplorador);
 		
 		agregaBuscarTitulo();
@@ -111,13 +112,6 @@ public class Explorador {
 		gbc_lblNewLabel_4.gridy = 1;
 		panel.add(labelEtiquetasDisponibles, gbc_lblNewLabel_4);
 		
-		labelEtiquetasSeleccionadas = new JLabel("Buscar etiquetas");
-		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
-		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_5.gridx = 5;
-		gbc_lblNewLabel_5.gridy = 4;
-		panel.add(labelEtiquetasSeleccionadas, gbc_lblNewLabel_5);
-		
 		
 	}
 	private void agregaPanelVideos() {
@@ -125,17 +119,15 @@ public class Explorador {
 		panelVideosExplorador = new JPanel();
 		
 		GridBagConstraints gbc_panelVideosExplorador = new GridBagConstraints();
-		gbc_panelVideosExplorador.gridwidth = 3;
-		gbc_panelVideosExplorador.gridheight = 4;
+		gbc_panelVideosExplorador.gridwidth = 4;
+		gbc_panelVideosExplorador.gridheight = 5;
 		gbc_panelVideosExplorador.insets = new Insets(0, 0, 0, 5);
 		gbc_panelVideosExplorador.fill = GridBagConstraints.BOTH;
 		gbc_panelVideosExplorador.gridx = 1;
 		gbc_panelVideosExplorador.gridy = 2;
 		
 		scrollPaneVideos = new JScrollPane();
-		scrollPaneVideos.setPreferredSize(new Dimension(441, 269));
-		panelVideosExplorador.add(scrollPaneVideos);
-		panel.add(panelVideosExplorador, gbc_panelVideosExplorador);
+		panel.add(scrollPaneVideos, gbc_panelVideosExplorador);
 		
 		
 	}
@@ -151,26 +143,27 @@ public class Explorador {
 		gbc_EtiquetasDis.gridy = 2;
 		
 		scrollPaneEtiquetasDis = new JScrollPane();
-		scrollPaneEtiquetasDis.setPreferredSize(new Dimension(110, 125));
-		panelEtiquetasDis.add(scrollPaneEtiquetasDis);
-		panel.add(panelEtiquetasDis, gbc_EtiquetasDis);
+		panel.add(scrollPaneEtiquetasDis, gbc_EtiquetasDis);
 	}
 	private void agregaPanelEtiqeutasSelec() {
 		
 		panelEtiquetasSelec = new JPanel();
+		
+		labelEtiquetasSeleccionadas = new JLabel("Buscar etiquetas");
+		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
+		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_5.gridx = 5;
+		gbc_lblNewLabel_5.gridy = 4;
+		panel.add(labelEtiquetasSeleccionadas, gbc_lblNewLabel_5);
 		GridBagConstraints gbc_EtiquetasSele = new GridBagConstraints();
+		gbc_EtiquetasSele.insets = new Insets(0, 0, 5, 0);
 		gbc_EtiquetasSele.fill = GridBagConstraints.BOTH;
 		gbc_EtiquetasSele.gridx = 5;
 		gbc_EtiquetasSele.gridy = 5;
 		
 		scrollPaneEtiquetasSelec = new JScrollPane();
-		scrollPaneEtiquetasSelec.setPreferredSize(new Dimension(110, 125));
-		panelEtiquetasSelec.add(scrollPaneEtiquetasSelec);
-		panel.add(panelEtiquetasSelec, gbc_EtiquetasSele);
 		
-		panel.add(panelEtiquetasSelec, gbc_EtiquetasSele);
-
-		//scrollPaneEtiquetasSelec.setViewportView(listEtiquetasSeleccionadas);
+		panel.add(scrollPaneEtiquetasSelec, gbc_EtiquetasSele);
 		
 		
 	}
@@ -190,9 +183,7 @@ public class Explorador {
 		botonNuevaBusqueda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				JList<String> videosBuscados = new JList<String>();
-				scrollPaneVideos.setViewportView(videosBuscados);
-				textoBuscarTitulo.setText("");
+				limpiarPanel();
 			 }
 			
 		});
@@ -200,19 +191,10 @@ public class Explorador {
 	}
 	private void mostrarVideosDeBusqueda(String nombre) {
 		
-		List<Video> videos = Controlador.getUnicaInstancia().buscarVideos(nombre);
+		List<Video> videos = Controlador.getUnicaInstancia().buscarVideos(nombre,selec);
 		
 		videosBuscados = JListRenderer.getInstancia().getListaR(videos);
 		
-		List<String> videosEti;
-	
-		if(selec.size() > 0) {
-			
-			videosEti = Controlador.getUnicaInstancia().buscarVideosPorEtiquetas(selec);
-			videos.retainAll(videosEti);
-			
-		}
-
 		videosBuscados.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
@@ -222,6 +204,7 @@ public class Explorador {
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
 						Video vid = (Video) item;
+						Controlador.getUnicaInstancia().addReciente(vid);
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
 						Controlador.getUnicaInstancia().agregarReproduccion(vid);
 						
@@ -316,6 +299,20 @@ public class Explorador {
 	public void actualizar() {
 		
 		llenarEtiquetasDisponibles();
+		limpiarSeleccionadas();
+		limpiarPanel();
 		
+	}
+	public void limpiarSeleccionadas() {
+		
+		selec.clear();
+		agregarEtiquetasSeleccionadas();
+		
+	}
+	public void limpiarPanel() {
+		
+		JList<String> videosBuscados = new JList<String>();
+		scrollPaneVideos.setViewportView(videosBuscados);
+		textoBuscarTitulo.setText("");
 	}
 }

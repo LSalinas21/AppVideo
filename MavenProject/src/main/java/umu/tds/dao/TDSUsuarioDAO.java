@@ -1,5 +1,6 @@
 package umu.tds.dao;
 
+import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import umu.tds.dominio.Etiqueta;
 import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
+import umu.tds.dominio.filtro.FiltroVideo;
+import umu.tds.dominio.filtro.NoFiltro;
 
 public final class TDSUsuarioDAO implements UsuarioDAO {
 
@@ -30,6 +33,8 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String FECHA_NACIMIENTO = "fechaNacimiento";
 	private static final String RECIENTE = "videosRecientes";
 	private static final String PLAYLISTS = "playlist";
+	private static final String FILTRO = "filtro";
+	private static final String PREMIUN = "premiun";
 
 	private ServicioPersistencia servPersistencia;
 	private SimpleDateFormat dateFormat;
@@ -49,12 +54,18 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(eUsuario, FECHA_NACIMIENTO);
 		Queue<Video> videosRecientes = stringToRecientes(servPersistencia.recuperarPropiedadEntidad(eUsuario, RECIENTE));
 		List<PlayList> misListas = stringToPlayList(servPersistencia.recuperarPropiedadEntidad(eUsuario, PLAYLISTS));
-		
+		String nomFiltro = servPersistencia.recuperarPropiedadEntidad(eUsuario ,FILTRO);
+		String premiun = servPersistencia.recuperarPropiedadEntidad(eUsuario ,PREMIUN);
 
 		Usuario usuario = new Usuario(nombre, apellidos, email, login, password, fechaNacimiento);
 		usuario.setId(eUsuario.getId());
-		usuario.setRecientes(videosRecientes);
-		usuario.setPlayList(misListas);
+		usuario.setFiltro(nomFiltro);
+		usuario.setPremiun(premiun);
+		
+		if(videosRecientes.size() > 0)
+			usuario.setRecientes(videosRecientes);
+		if(misListas.size() > 0)
+			usuario.setPlayList(misListas);
 
 		return usuario;
 	}
@@ -71,7 +82,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 				new Propiedad(NICK, usuario.getNick()), new Propiedad(PASSWORD, usuario.getPassword()),
 				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()),
 				new Propiedad(PLAYLISTS, playListToString(usuario.getPlayList())),
-				new Propiedad(RECIENTE, recientesToString(usuario.getVideosRecientes())))));//,new Propiedad(RECIENTE,codificarVideos(usuario.getVideosRecientes())))));
+				new Propiedad(RECIENTE, recientesToString(usuario.getVideosRecientes())),
+				new Propiedad(PREMIUN, usuario.getPremiunToString()),
+				new Propiedad(FILTRO, usuario.getFiltroToString()))));
 		return eUsuario;
 	}
 
@@ -83,13 +96,12 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 			
 			linea += v.getId() + " ";
 		}
-		
 		return linea.trim();
 	}
 	public Queue<Video> stringToRecientes(String linea){
 		
 		Queue<Video> recientes = new ArrayDeque<Video>();
-		if(linea != null) {
+		if(!linea.equals("")) {
 			
 			String[] vids = linea.split(" ");
 			
@@ -126,6 +138,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	 * Permite que un Usuario modifique su perfil: password y email
 	 */
 	public void update(Usuario usuario) {
+		
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
 
 		for (Propiedad prop : eUsuario.getPropiedades()) {
@@ -140,7 +153,19 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 			} else if (prop.getNombre().equals(NICK)) {
 				prop.setValor(usuario.getNick());
 			} else if (prop.getNombre().equals(FECHA_NACIMIENTO)) {
-				prop.setValor(dateFormat.format(usuario.getFechaNacimiento()));
+				prop.setValor(usuario.getFechaNacimiento());
+			}else if(prop.getNombre().equals(RECIENTE)) {
+				
+				prop.setValor(recientesToString(usuario.getVideosRecientes()));
+			}else if(prop.getNombre().equals(PLAYLISTS)) {
+				
+				prop.setValor(playListToString(usuario.getPlayList()));
+			}else if(prop.getNombre().equals(PREMIUN)) {
+				
+				prop.setValor(usuario.getPremiunToString());
+			}else if(prop.getNombre().equals(FILTRO)) {
+				
+				prop.setValor(usuario.getFiltroToString());
 			}
 			servPersistencia.modificarPropiedad(prop);
 		}
@@ -148,66 +173,41 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	public String playListToString(List<PlayList> listas) {
 		
 		String linea = "";
-		
-		for(PlayList pl: listas) {
+		if(listas.size() > 0) {
 			
-			linea += pl.getNombre() + " ";
-			
-			for(Video v: pl.getVideos()) {
+			for(PlayList pl: listas) {
 				
-				linea += v.getId() + " ";
+				linea += pl.getId() + " ";
 			}
-			
-			linea = linea.trim();
-			linea += "$";
 		}
-		return linea;
+		return linea.trim();
 		
 	}
 	public List<PlayList> stringToPlayList(String linea) {
 		
 		List<PlayList> lista = new ArrayList<PlayList>();
-		if(linea != null) {
+		
+		if(linea == null)
+			return lista;
+		if(linea.equals(""))
+			return lista;
 			
-			String[] pls = linea.split("\\$");
-			
+			String[] pls = linea.split(" ");
 			
 			for (String cad: pls) {
-				
-				String[] vids = cad.split(" ");
-				
-				List<Video> videos = new ArrayList<Video>();
-				String nombre = "";
-				
-				for (String cad2: vids) {
-					
-					if(nombre.equals("")) {
 						
-						nombre = cad2;
-					}else {
-						
-						try {
+				try {
 							
-							TDSVideoDAO eVideo = new TDSVideoDAO();
-							Video video = eVideo.get(Integer.parseInt(cad2));
-							videos.add(video);
+					TDSPlayListDAO ePlayList = new TDSPlayListDAO();
+					PlayList playList = ePlayList.get(Integer.parseInt(cad));
+					lista.add(playList);
 							
-						}catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-						
-					}
-					
+				}catch (Exception e) {
+					System.out.println(e.getMessage());
 				}
-				PlayList playList = new PlayList(nombre, videos);
-
-				lista.add(playList);
-				
 			}
-		}
 		
-		return lista;
-		
+		return lista;	
 	}
 	public Usuario get(int id) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(id);

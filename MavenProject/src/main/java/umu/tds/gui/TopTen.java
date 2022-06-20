@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -17,22 +16,22 @@ import umu.tds.controlador.Controlador;
 import umu.tds.dominio.Video;
 import umu.tds.herramientas.JListRenderer;
 
-public class Recientes {
+public class TopTen {
+
+	private JPanel panel,panelTopTen;
+	private JLabel labelTopTen;
+	private JScrollPane scrollPaneTopTen;
+	private JList videosTopTen;
 	
-	private JPanel panel,panelRecientes;
-	private JLabel labelMasRecientes;
-	private JScrollPane scrollPaneMasRecientes;
-	private JList videosRecientes;
-	
-	public Recientes() {
+	public TopTen() {
 		
-		videosRecientes = new JList();
+		videosTopTen = new JList();
 		panel = new JPanel();
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		agregaLabels();
-		agregaPanelRecientes();
-		mostrarVideosRecientes();
+		agregaPanelTopTen();
+		mostrarVideosTopTen();
 	}
 	public JPanel getInstancia() {
 		
@@ -40,29 +39,29 @@ public class Recientes {
 	}
 	private void agregaLabels() {
 		
-		labelMasRecientes = new JLabel("5 videos más recientes");
-		labelMasRecientes.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(labelMasRecientes, BorderLayout.NORTH);
+		labelTopTen = new JLabel("10 videos más vistos");
+		labelTopTen.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(labelTopTen, BorderLayout.NORTH);
 	}
-	private void agregaPanelRecientes() {
+	private void agregaPanelTopTen() {
 		
-		scrollPaneMasRecientes = new JScrollPane();
-		panel.add(scrollPaneMasRecientes, BorderLayout.CENTER);
+		scrollPaneTopTen = new JScrollPane();
+		panel.add(scrollPaneTopTen, BorderLayout.CENTER);
 		
-		panelRecientes = new JPanel();
-		scrollPaneMasRecientes.setViewportView(panelRecientes);
-		panelRecientes.setLayout(new GridLayout(0, 1, 0, 0));
+		panelTopTen = new JPanel();
+		scrollPaneTopTen.setViewportView(panelTopTen);
+		panelTopTen.setLayout(new GridLayout(0, 1, 0, 0));
 	}
 	public void actualizar() {
 		
-		mostrarVideosRecientes();
+		mostrarVideosTopTen();
 	}
-	private void mostrarVideosRecientes() {
+	private void mostrarVideosTopTen() {
 		
-		List<Video> videos = Controlador.getUnicaInstancia().getRecientes();
-		videosRecientes = JListRenderer.getInstancia().getListaR(videos);
+		List<Video> videos = Controlador.getUnicaInstancia().getTopTen();
+		videosTopTen = JListRenderer.getInstancia().getListaR(videos);
 		
-		videosRecientes.addMouseListener(new MouseInputAdapter() {
+		videosTopTen.addMouseListener(new MouseInputAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				
 				if (me.getClickCount() == 2) {
@@ -71,6 +70,8 @@ public class Recientes {
 					if (index >= 0) {
 						Object item = target.getModel().getElementAt(index);
 						Video vid = (Video) item;
+						
+						Controlador.getUnicaInstancia().addReciente(vid);
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
 						Controlador.getUnicaInstancia().agregarReproduccion(vid);
 						Controlador.getUnicaInstancia().addReciente(vid);
@@ -80,8 +81,9 @@ public class Recientes {
 			}
 		});
 	
-		scrollPaneMasRecientes.setViewportView(videosRecientes);
+		scrollPaneTopTen.setViewportView(videosTopTen);
 		
 	}
 
 }
+
