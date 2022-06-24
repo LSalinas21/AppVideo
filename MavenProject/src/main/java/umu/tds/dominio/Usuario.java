@@ -5,16 +5,13 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 import umu.tds.dominio.filtro.FactoriaFiltro;
 import umu.tds.dominio.filtro.FiltroVideo;
 
-public class Usuario<playListReciente> {
+public class Usuario {
 
 	private int id;
 	private String nombre;
@@ -108,29 +105,7 @@ public class Usuario<playListReciente> {
 		this.id = id;
 	}
 
-	public String[] getMisListas() {
-		
-		String[] playList = new String[misListas.size()+1];
-		playList[0] = "---Selecciona---";
-		int i = 1;
-		for(PlayList pl: misListas) {
-			
-			playList[i] = pl.getNombre();
-			i++;
-		}
-		return playList;
-	}
-	public ArrayList<String> getPlayList(String nombre) {
-		
-		ArrayList<String> lista = new ArrayList<String>();
-		for(PlayList l: misListas) {
-
-			if(l.getNombre().contains(nombre))
-				lista.add(l.getNombre());
-		}
-		return lista;
-	}
-	public List<PlayList> getPlayList() {
+	public List<PlayList> getAllPlayList() {
 		
 		return misListas;
 	}

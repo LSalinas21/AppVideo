@@ -56,9 +56,15 @@ public class CatalogoUsuarios {
 		asistentesPorLogin.put(usuario.getNick(), usuario);
 	}
 	
-	public void removeUsuario(Usuario usuario) {
+	public boolean removeUsuario(Usuario usuario) {
+		
 		asistentesPorID.remove(usuario.getId());
-		asistentesPorLogin.remove(usuario.getNick());
+		return asistentesPorLogin.remove(usuario.getNick()) != null;
+	}
+	public Usuario crearUsuario(String nombre, String apellidos, String email, String login, String password,
+			String fechaNacimiento) {
+		
+		return new Usuario(nombre,apellidos,email,login,password,fechaNacimiento);
 	}
 
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<videos xmlns="http://www.tds.es/videos" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:schemaLocation="http://www.tds.es/videos videos.xsd">
+	
+	<video titulo="VID1">
+		<URL><![CDATA[url1]]></URL>
+	</video>
+
+	<video titulo="VID2">
+		<URL><![CDATA[url2]]></URL>
+	</video>
+	
+	<video titulo="VID3">
+		<URL><![CDATA[url3]]></URL>
+	</video>
+
+	<video titulo="VID4">
+		<URL><![CDATA[url4]]></URL>
+	</video>
+	
+	<video titulo="VID5">
+		<URL><![CDATA[url5]]></URL>
+	</video>
+	
+	<video titulo="VID6">
+		<URL><![CDATA[url6]]></URL>
+	</video>
+
+</videos>

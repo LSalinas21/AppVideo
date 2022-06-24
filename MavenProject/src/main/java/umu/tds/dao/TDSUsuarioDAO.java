@@ -1,25 +1,19 @@
 package umu.tds.dao;
 
-import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
-import umu.tds.dominio.Etiqueta;
 import umu.tds.dominio.PlayList;
 import umu.tds.dominio.Usuario;
 import umu.tds.dominio.Video;
-import umu.tds.dominio.filtro.FiltroVideo;
-import umu.tds.dominio.filtro.NoFiltro;
 
 public final class TDSUsuarioDAO implements UsuarioDAO {
 
@@ -37,11 +31,9 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 	private static final String PREMIUN = "premiun";
 
 	private ServicioPersistencia servPersistencia;
-	private SimpleDateFormat dateFormat;
 
 	public TDSUsuarioDAO() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	}
 
 	private Usuario entidadToUsuario(Entidad eUsuario) {
@@ -75,13 +67,11 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 		Entidad eUsuario = new Entidad();
 		eUsuario.setNombre(USUARIO);
 		
-		playListToString(usuario.getPlayList());
-		
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad(NOMBRE, usuario.getNombre()),
 				new Propiedad(APELLIDOS, usuario.getApellidos()), new Propiedad(EMAIL, usuario.getEmail()),
 				new Propiedad(NICK, usuario.getNick()), new Propiedad(PASSWORD, usuario.getPassword()),
 				new Propiedad(FECHA_NACIMIENTO, usuario.getFechaNacimiento()),
-				new Propiedad(PLAYLISTS, playListToString(usuario.getPlayList())),
+				new Propiedad(PLAYLISTS, playListToString(usuario.getAllPlayList())),
 				new Propiedad(RECIENTE, recientesToString(usuario.getVideosRecientes())),
 				new Propiedad(PREMIUN, usuario.getPremiunToString()),
 				new Propiedad(FILTRO, usuario.getFiltroToString()))));
@@ -129,7 +119,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 
 	public boolean delete(Usuario usuario) {
 		Entidad eUsuario;
-		eUsuario = servPersistencia.recuperarEntidad(usuario.getId());
+		eUsuario = servPersistencia.recuperarEntidad(usuario.getId());	
 
 		return servPersistencia.borrarEntidad(eUsuario);
 	}
@@ -159,7 +149,7 @@ public final class TDSUsuarioDAO implements UsuarioDAO {
 				prop.setValor(recientesToString(usuario.getVideosRecientes()));
 			}else if(prop.getNombre().equals(PLAYLISTS)) {
 				
-				prop.setValor(playListToString(usuario.getPlayList()));
+				prop.setValor(playListToString(usuario.getAllPlayList()));
 			}else if(prop.getNombre().equals(PREMIUN)) {
 				
 				prop.setValor(usuario.getPremiunToString());

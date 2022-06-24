@@ -1,8 +1,6 @@
 package umu.tds.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -22,7 +20,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.MouseInputAdapter;
 
 import umu.tds.controlador.Controlador;
@@ -33,7 +30,7 @@ import umu.tds.herramientas.JListRenderer;
 
 public class MisListas {
 	
-	private JPanel panel,panelMisListasBuscadas;
+	private JPanel panel;
 	private JLabel buscarPlaylist,labelNuevaEtiqueta,labelEtiquetasDeVideo;
 	private JComboBox textAreaBuscarMisListas;
 	private JScrollPane panelBuscadas,panelEtiquetas;
@@ -66,12 +63,25 @@ public class MisListas {
 	}
 	public void actualizar() {
 		
-		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(Controlador.getUnicaInstancia().getMisListas()));
+		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(creaSeleccionableMisListas()));
 		textFieldNuevaEtiqueta.setText("");
 		modeloVideosLista.removeAllElements();
 		modeloEtiqeutasVideoSele.removeAllElements();
 		limpiarPanel();
 		
+	}
+	private String[] creaSeleccionableMisListas() {
+		
+		String[] plist = new String[Controlador.getUnicaInstancia().getPlayList().size() +1];
+		
+		plist[0] = "---Selecciona---";
+		int i = 1;
+		for(PlayList pl: Controlador.getUnicaInstancia().getPlayList()) {
+			
+			plist[i] = pl.getNombre();
+			i++;
+		}
+		return plist;
 	}
 	private void agregaEtiquetas() {
 		
@@ -151,7 +161,7 @@ public class MisListas {
 				}
 			}
 		});
-		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(Controlador.getUnicaInstancia().getMisListas()));
+		textAreaBuscarMisListas.setModel(new DefaultComboBoxModel(creaSeleccionableMisListas()));
 		GridBagConstraints gbc_textAreaBuscarMisListas = new GridBagConstraints();
 		gbc_textAreaBuscarMisListas.insets = new Insets(0, 0, 5, 5);
 		gbc_textAreaBuscarMisListas.fill = GridBagConstraints.HORIZONTAL;
@@ -161,7 +171,7 @@ public class MisListas {
 	}
 	private void agregaPanelMisListasBuscadas() {
 		
-		panelMisListasBuscadas = new JPanel();
+		new JPanel();
 		
 		GridBagConstraints gbc_panelMisListasBuscadas = new GridBagConstraints();
 		gbc_panelMisListasBuscadas.gridwidth = 2;

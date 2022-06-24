@@ -17,7 +17,7 @@ public class FiltroMisListas implements FiltroVideo{
 	}
 	@Override
 	public boolean esVideoOk(Video video) {
-		List<PlayList> pls = actual.getPlayList();
+		List<PlayList> pls = actual.getAllPlayList();
 		
 		for(PlayList pl: pls) {
 			for(Video v: pl.getListaVideos()) {

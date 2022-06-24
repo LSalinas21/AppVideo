@@ -1,13 +1,10 @@
 package umu.tds.controlador;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
@@ -38,7 +35,6 @@ public class Controlador implements VideosListener {
 	private Usuario usuarioActual;
 	private static Controlador unicaInstancia;
 	private FactoriaDAO factoria;
-	private static final int SIZE = 5;
 	private CatalogoVideos catalogoDeVideos;
 	private CatalogoUsuarios catalogoDeUsuarios;
 	private VideoApp reproductor;
@@ -94,7 +90,7 @@ public class Controlador implements VideosListener {
 		if (esUsuarioRegistrado(login))
 			return false;
 		
-		Usuario usuario = new Usuario(nombre, apellidos, email, login, password, fechaNacimiento);
+		Usuario usuario = catalogoDeUsuarios.crearUsuario(nombre, apellidos, email, login, password, fechaNacimiento);
 
 		userBD.create(usuario);
 		
@@ -115,9 +111,12 @@ public class Controlador implements VideosListener {
 		
 		if (!esUsuarioRegistrado(usuario.getNick()))
 			return false;
-
+		
+		for(PlayList pl: usuario.getAllPlayList())
+			borrarPlayList(pl.getNombre());
+		
 		userBD.delete(usuario);
-
+		
 		catalogoDeUsuarios.removeUsuario(usuario);
 		return true;
 	}
@@ -127,19 +126,14 @@ public class Controlador implements VideosListener {
 		usuarioActual = null;
 		return true;
 	}
-	///revisar
 
 	public List<Video> getLista(String nombre){
 		
 		return usuarioActual.getListaVideos(nombre);
 	}
-	public String[] getMisListas(){
-		
-		return usuarioActual.getMisListas();
-	}
 	public List<PlayList> getPlayList(){
 		
-		return usuarioActual.getPlayList();
+		return usuarioActual.getAllPlayList();
 	}
 	public void addReciente(Video v) {
 		
@@ -172,7 +166,7 @@ public class Controlador implements VideosListener {
 			List<Video> lista = catalogoDeVideos.getAllVideoss().stream()
 					.filter(video -> video.getEtiquetas().stream()
 							.map(eti -> eti.getNombre())
-							.anyMatch(e -> seleccionadas.contains(e)))
+							.anyMatch(e -> seleccionadas.contains(e)) && usuarioActual.getFiltro().esVideoOk(video))
 					.collect(Collectors.toList());
 			return lista;
 			
@@ -182,7 +176,7 @@ public class Controlador implements VideosListener {
 					.filter(video -> video.getEtiquetas().stream()
 							.map(eti -> eti.getNombre())
 							.anyMatch(e -> seleccionadas.contains(e)))
-					.filter(vid -> vid.getTitulo().toLowerCase().contains(titulo.toLowerCase()))
+					.filter(vid -> vid.getTitulo().toLowerCase().contains(titulo.toLowerCase()) && usuarioActual.getFiltro().esVideoOk(vid))
 					.collect(Collectors.toList());
 		
 			return lista;
@@ -246,7 +240,11 @@ public class Controlador implements VideosListener {
 			
 			for (Video video : adaptarVideos(((VideosEvent) event).getVideos())) {
 				
-				catalogoDeVideos.addVideo(videoBD.create(video));
+				if(!catalogoDeVideos.videoExistente(video)) {
+					
+					catalogoDeVideos.addVideo(videoBD.create(video));
+				}
+				
 			}
 		}
 	}

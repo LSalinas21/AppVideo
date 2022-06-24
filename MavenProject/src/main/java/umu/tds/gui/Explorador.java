@@ -47,7 +47,7 @@ public class Explorador {
 		panel = new JPanel();
 		
 		GridBagLayout gbl_panelExplorador = new GridBagLayout();
-		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 27, 0, 0};
+		gbl_panelExplorador.columnWidths = new int[]{25, 0, 0, 0, 31, 76, 0};
 		gbl_panelExplorador.rowHeights = new int[]{39, 0, 93, 0, 0, 27, 9, 0};
 		gbl_panelExplorador.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panelExplorador.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};

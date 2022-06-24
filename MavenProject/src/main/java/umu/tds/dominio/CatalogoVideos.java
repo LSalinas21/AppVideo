@@ -98,6 +98,15 @@ public class CatalogoVideos {
 		
 		videosExistentes.remove(video.getId());
 	}
+	public boolean videoExistente(Video video) {
+		
+		for(Video v: videosExistentes.values()) {
+			
+			if(v.getUrl().equals(video.getUrl()))
+				return true;
+		}
+		return false;
+	}
 	
 
 }

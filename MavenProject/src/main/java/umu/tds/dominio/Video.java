@@ -74,7 +74,5 @@ public class Video {
 		
 		return listaEtiquetas;
 	}
-	
-	
 
 }
