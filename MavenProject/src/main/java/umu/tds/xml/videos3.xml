@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<videos xmlns="http://www.tds.es/videos" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:schemaLocation="http://www.tds.es/videos videos.xsd">
+	
+	<video titulo="Freyja | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=AwUe1xCi6H0]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Historia</etiqueta>
+		<etiqueta>Nordico</etiqueta>
+	</video>
+
+	<video titulo="Odín | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=GKnQGP67Xd0]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Mitologia</etiqueta>
+		<etiqueta>Rock</etiqueta>
+	</video>
+	
+	<video titulo="Hera | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=nhsdZA6v0d4]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Grecia</etiqueta>
+	</video>
+
+	<video titulo="Hestia | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=nqc4t4029as]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Fuego</etiqueta>
+		<etiqueta>Ritmo</etiqueta>
+	</video>
+	
+	<video titulo="Ares | Destripando la Historia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=2JXEp2im-LA]]></URL>
+		<etiqueta>Musica</etiqueta>
+		<etiqueta>Guerra</etiqueta>
+	</video>
+
+</videos>

@@ -4,10 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
-
-import umu.tds.controlador.Controlador;
 import umu.tds.dominio.Etiqueta;
 import umu.tds.dominio.Video;
 
@@ -29,12 +26,12 @@ public class VideoTest {
 		Video vTest2 = new Video("titulo2","url2",0);
 		Video vTest3 = new Video("titulo3","url3",0);
 		
-		vTest1.agregarEtiqueta(et1);
-		vTest1.agregarEtiqueta(et2);
+		vTest1.agregarEtiqueta("et1");
+		vTest1.agregarEtiqueta("et2");
 		
-		vTest2.agregarEtiqueta(et1);
+		vTest2.agregarEtiqueta("et1");
 		
-		vTest3.agregarEtiqueta(et2);
+		vTest3.agregarEtiqueta("et2");
 		
 		listaEtiquetaVideo1.add(et1);
 		listaEtiquetaVideo1.add(et2);

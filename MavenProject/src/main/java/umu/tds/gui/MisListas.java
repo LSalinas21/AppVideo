@@ -39,12 +39,14 @@ public class MisListas {
 	private JList etiquetasVideo;
 	private DefaultListModel modeloVideosLista, modeloEtiqeutasVideoSele;
 	private Video videoSeleccionado;
+	private JList videosPlaylist;
 	
 	public MisListas() {
 		
 		modeloVideosLista = new DefaultListModel();
 		modeloEtiqeutasVideoSele = new DefaultListModel();
 		panel = new JPanel();
+		videosPlaylist = new JList();
 		GridBagLayout gbl_panelMisListas = new GridBagLayout();
 		gbl_panelMisListas.columnWidths = new int[]{10, 50, 79, 0, 0, 50, 20, 0, 0, 0};
 		gbl_panelMisListas.rowHeights = new int[]{10, 0, 0, 0, 0, 0, 0, 10, 0};
@@ -193,7 +195,7 @@ public class MisListas {
 		
 		List<Video> misListas;
 		misListas = Controlador.getUnicaInstancia().getLista(nombre);
-		JList videosPlaylist = new JList();
+		
 		videosPlaylist = JListRenderer.getInstancia().getListaR(misListas);
 
 		videosPlaylist.addMouseListener(new MouseInputAdapter() {
@@ -257,7 +259,8 @@ public class MisListas {
 				if(!texto.equals("")) {
 					
 					Etiqueta etiquetaCreada = Controlador.getUnicaInstancia().agregarEtiqueta(videoSeleccionado, texto);
-					modeloEtiqeutasVideoSele.addElement(etiquetaCreada.getNombre());
+					if(!modeloEtiqeutasVideoSele.contains(etiquetaCreada.getNombre()))
+						modeloEtiqeutasVideoSele.addElement(etiquetaCreada.getNombre());
 				}
 			 }
 			

@@ -209,7 +209,7 @@ public class Explorador {
 						Controlador.getUnicaInstancia().agregarReproduccion(vid);
 						
 					}
-				}/*else if (me.getClickCount() == 1) {
+				}else if (me.getClickCount() == 1) {
 					JList target = (JList) me.getSource();
 					int index = target.locationToIndex(me.getPoint());
 					if (index >= 0) {
@@ -219,7 +219,7 @@ public class Explorador {
 						Controlador.getUnicaInstancia().borrarVideo(vid);
 						
 					}
-				}*/
+				}
 			}
 		});
 	

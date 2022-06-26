@@ -110,6 +110,7 @@ public class ControladorTest {
 		videosRecuperados = controlador.getLista(PLAYLIST);
 		assertTrue(controlador.getPlayList().size() == 1);
 		assertFalse(videosRecuperados.contains(aux));
+		
 		for (Video vid : listaVideos)
 			assertTrue(videosRecuperados.contains(vid));
 		
@@ -118,6 +119,7 @@ public class ControladorTest {
 		
 		for(Video v: listaVideos)
 			Controlador.getUnicaInstancia().borrarVideo(v);
+		Controlador.getUnicaInstancia().borrarVideo(aux);
 	}
 	
 	@AfterClass

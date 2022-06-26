@@ -140,6 +140,19 @@ public class Usuario {
 		
 		misListas.add(pl);
 	}
+	public void agregarReproduccion(Video video) {
+		
+		misListas.stream().filter(pl -> pl.getListaVideos().stream().anyMatch(v -> v.getUrl().equals(video.getUrl())))
+		.forEach(pl -> {
+				Video vid = pl.getListaVideos().stream().filter(v -> v.getUrl().equals(video.getUrl())).findAny().get();
+				List<Video> aux = pl.getVideos();
+				aux.remove(vid);
+				aux.add(video);
+				pl.setVideos(aux);
+		});
+		
+							
+	}
 	public void setVideosReciente(Video video) {
 		
 		Video aux = null;

@@ -343,7 +343,9 @@ public class NuevaLista {
 						Object item = target.getModel().getElementAt(index);
 						Video vid = (Video)item;
 						
+						Controlador.getUnicaInstancia().addReciente(vid);
 						Controlador.getUnicaInstancia().reproducir(vid.getTitulo(), vid.getUrl());
+						Controlador.getUnicaInstancia().agregarReproduccion(vid);
 						
 					}
 				}else if(me.getClickCount() == 1) {

@@ -61,6 +61,18 @@ public class Controlador implements VideosListener {
 		plBD = factoria.getPlayListDAO();
 		cargador.addVideosListener(this);
 		
+		try {
+			cargaInicial();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	private void cargaInicial() throws JAXBException {
+		
+		cargador.setArchivoVideos("src/main/java/umu/tds/xml/videos3.xml");
+		
 	}
 	public ImageIcon getIcono(String url) {
 		
@@ -226,8 +238,9 @@ public class Controlador implements VideosListener {
 	}
 	public void agregarReproduccion(Video video) {
 		
-		catalogoDeVideos.agregarReproduccion(video);
-		videoBD.update(video);
+		usuarioActual.agregarReproduccion(video);
+		videoBD.update(catalogoDeVideos.agregarReproduccion(video));	
+		userBD.update(usuarioActual);
 	}
 	
 	public boolean cargarVideosDesdeFichero(String xmlFile) throws JAXBException {

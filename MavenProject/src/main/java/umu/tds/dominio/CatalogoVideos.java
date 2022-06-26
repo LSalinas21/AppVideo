@@ -61,11 +61,11 @@ public class CatalogoVideos {
 	public Etiqueta setNuevaEtiqueta(Video video, String nomEtiqueta) {
 		
 		Video v = videosExistentes.get(video.getId());
-
-		Etiqueta nueva = new Etiqueta(nomEtiqueta);
 		
-		v.agregarEtiqueta(nueva);
-		videosExistentes.replace(v.getId(), v);
+		Etiqueta nueva = v.agregarEtiqueta(nomEtiqueta);
+		
+		if(nueva != null)
+			videosExistentes.replace(v.getId(), v);
 		
 		return nueva;
 
@@ -86,12 +86,14 @@ public class CatalogoVideos {
 		}
 		return lista;
 	}
-	public void agregarReproduccion(Video video) {
+	public Video agregarReproduccion(Video video) {
 		
 		Video vidMod = videosExistentes.get(video.getId());
 		vidMod.setNumRepro(vidMod.getNumRepro() + 1);
 		
 		videosExistentes.replace(vidMod.getId(), vidMod);
+		
+		return vidMod;
 		
 	}
 	public void borrarVideo(Video video) {

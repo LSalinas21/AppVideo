@@ -66,9 +66,15 @@ public class Video {
 		
 		this.id = id;
 	}
-	public void agregarEtiqueta(Etiqueta etiqueta) {
+	public Etiqueta agregarEtiqueta(String nomEtiqueta) {
 		
-		listaEtiquetas.add(etiqueta);
+		Etiqueta nueva = new Etiqueta(nomEtiqueta);
+		
+		if(!listaEtiquetas.contains(nueva)) {
+			listaEtiquetas.add(nueva);
+			return nueva;
+		}
+		return null;
 	}
 	public List<Etiqueta> getEtiquetas(){
 		
